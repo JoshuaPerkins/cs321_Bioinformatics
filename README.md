@@ -2,7 +2,7 @@
 * Project: Bioinformatics
 * Class: CS 321 - Steven Cutchin
 * Date: April 13, 2018
-* Author: Joshua Perkins (JPerkins)
+* Authors: Lane Dirkes, David Flores, & Joshua Perkins
 **************** 
 
 **-- * -- THIS IS A TEMPLATE THAT NEEDS REPLACING -- * --**
