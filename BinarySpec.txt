@@ -7,8 +7,8 @@
 *Node Metadata
 	1. parent_pointer - 4 bytes 
 	2. number_of_children - 4 bytes
-	3. isLeaf - 1 bytes (3 empty)
-	- 9 bytes total, 12 bytes word aligned
+	3. isLeaf - 1 bytes (15 empty)
+	- 9 bytes total, 24 bytes word aligned
 *Key size = 64 bits = 8 bytes
 *meta-data of single node + size of pointer (to parent) + size of key*(2t - 1) + size of pointer (to children) * 2t = 4096
 	- 12 + 8(2t-1) + 4*2t = 4096
@@ -16,10 +16,10 @@
 	- 24t = 4092
 	- t = 170
 *Node Structure
-	1. Metadata (12 Bytes, offset = 0)
-	2. 170 Keys (2712 Bytes, offset = 12)
-	3. 340 Children Pointers (1360 Bytes, offset = 2724)
-	4. 12 Bytes dead space
+	1. Metadata (24 Bytes, offset = 0)
+	2. 339 Keys (2712 Bytes, offset = 24)
+	3. 340 Children Pointers (1360 Bytes, offset = 2736)
+
 A = 00
 T = 11
 C = 01
