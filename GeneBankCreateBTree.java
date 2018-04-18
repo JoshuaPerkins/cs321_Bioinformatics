@@ -11,6 +11,13 @@ import java.io.*;
  */
 public class GeneBankCreateBTree {
 
+    static final long BASE_A = 0b00L;
+    static final long BASE_T = 0b11L;
+    static final long BASE_C = 0b01L;
+    static final long BASE_G = 0b10L;
+
+    static final char geneMap[] = {(char)BASE_A, (char)BASE_C, (char)BASE_G, (char)BASE_T};
+
     public static void main(String[] args) {
 
         final int MIN_ARGS_IN = 5;
@@ -21,10 +28,7 @@ public class GeneBankCreateBTree {
         final String DEBUG_FILE_OUT = "dump";
 
         // Defined DNA Bases
-        final long BASE_A = 0b00L;
-        final long BASE_T = 0b11L;
-        final long BASE_C = 0b01L;
-        final long BASE_G = 0b10L;
+
 
         final int MAX_SEQUENCE_LENGTH = 31;
 
@@ -244,5 +248,51 @@ public class GeneBankCreateBTree {
         //System.out.println("Usage: java GeneBankCreateBTree <degree> <gbk file> <sequence length> [<debug level>]\n");
         System.out.println("Usage: java GeneBankCreateBTree <cache> <degree> <gbk file> <sequence length> <cache size> [<debug level>]\n");   // cache optional?
         System.exit(0);
+    }
+
+    Long subsequenceToLong(String subsequence, int k) {
+        long key = 0x00;
+        long temp = 0;
+        int shift;
+
+        for (int i = 0; i < k; i++) {
+            shift = 2*i;
+            switch (subsequence.charAt(i)) {
+                case 'a':
+                    temp = BASE_A << shift;
+                    break;
+                case 't':
+                    temp = BASE_T << shift;
+                    break;
+                case 'c':
+                    temp = BASE_C << shift;
+                    break;
+                case 'g':
+                    temp = BASE_G << shift;
+                    break;
+            }
+            key = key | temp;
+        }
+        return key;
+    }
+
+    String longToSubsequence(long key, int k) {
+        StringBuilder result = new StringBuilder();
+        int shift;
+        long temp;
+        char gene;
+
+        for (int i = 0; i < k; i++) {
+            shift = 2*i;
+            temp = key;
+
+            temp = temp >> shift;
+            temp = temp & 0b11L;
+
+            gene = geneMap[(int)temp];
+            result.append(gene);
+        }
+        String subsequence = result.toString();
+        return subsequence;
     }
 }
