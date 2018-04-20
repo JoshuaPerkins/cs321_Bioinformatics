@@ -24,10 +24,15 @@ public class BTreeNode {
      * Constructor method for a BTreeNode
      */
     public BTreeNode(int degree){
-        this.degree = degree;
-        this.children = new long[2*degree];
-        this.keys = new long[2*degree-1];
-        this.freqency = new long[2*degree-1];
+        if(degree > 0) {
+            this.degree = degree;
+        }
+        else{
+            this.degree = 170;
+        }
+        this.children = new long[2 * degree];
+        this.keys = new long[2 * degree - 1];
+        this.freqency = new long[2 * degree - 1];
     }
 
     /**
@@ -61,7 +66,8 @@ public class BTreeNode {
      * Method for setting the file offset in a B-Tree node
      * @param fileOffset: desired file offset
      */
-    public void setFileOffset(long fileOffset){
+    public void setFileOffset(long fileOffset, RandomAccessFile myFile) throws IOException{
         this.fileOffset = fileOffset;
+        myFile.seek(fileOffset);
     }
 }
