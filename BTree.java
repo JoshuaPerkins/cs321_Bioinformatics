@@ -34,7 +34,7 @@ public class BTree{
     public BTreeNode createBTN(int degree, RandomAccessFile myFile) throws IOException{
         BTreeNode result = new BTreeNode(degree);
         long fileOffset = myFile.length();
-        result.setFileOffset(fileOffset);
+        result.setFileOffset(fileOffset, myFile);
         result.writeNode(myFile);
         return result;
     }
@@ -66,7 +66,7 @@ public class BTree{
     }
 
     /**
-     * Method that does something but I dont know what
+     * Method that splits a B-tree node in half
      */
     public void split(){
 
