@@ -8,6 +8,60 @@
  * Class: CS 321 - Data Structures
  * Spring 2018 - Steven Cutchin
  */
-public class BTreeNode {
+import java.io.*;
 
+public class BTreeNode {
+    // class variables
+    long fileOffset;
+    int degree;
+    long children[];
+    long keys[];
+    long freqency[];
+    long numKeys;
+    boolean isLeaf;
+
+    /**
+     * Constructor method for a BTreeNode
+     */
+    public BTreeNode(int degree){
+        this.degree = degree;
+        this.children = new long[2*degree];
+        this.keys = new long[2*degree-1];
+        this.freqency = new long[2*degree-1];
+    }
+
+    /**
+     * Method for writing a node to a binary file
+     * @param myFile: file to be written to
+     */
+    public void writeNode(RandomAccessFile myFile) throws IOException{
+        myFile.seek(fileOffset);
+        myFile.writeLong(fileOffset);
+        int i;
+        for(i=0; i < this.children.length; i++){
+            myFile.writeLong(children[i]);
+        }
+    }
+
+    /**
+     * Method for reading a node from a binary file
+     * @param myFile: file to be read from
+     */
+    public long readNode(RandomAccessFile myFile) throws IOException{
+        myFile.seek(fileOffset);
+        long afo = myFile.readLong();
+        int i;
+        for(i=0; i < this.children.length; i++){
+            this.children[i] = myFile.readLong();
+        }
+        return afo;
+    }
+
+    /**
+     * Method for setting the file offset in a B-Tree node
+     * @param fileOffset: desired file offset
+     */
+    public void setFileOffset(long fileOffset){
+        this.fileOffset = fileOffset;
+    }
 }
