@@ -105,7 +105,7 @@ public class GeneBankSearch {
         // Catches exception if file not found
         catch(FileNotFoundException e) {
             System.out.println("ERROR: Cannot open file : " + e.getMessage() + "\n\n");
-            System.out.println("Make sure that the gbk file is in the same folder as the HashTest and other java files for this project.");
+            System.out.println("Make sure that the btree / query file is in the same folder as the HashTest and other java files for this project.");
             System.exit(0);
         }
         // Catches exception if error closing readers
@@ -117,8 +117,8 @@ public class GeneBankSearch {
     }
 
     private static void printGeneBankSearchUse() {
-        //System.out.println("Usage: java GeneBankCreateBTree <degree> <gbk file> <sequence length> [<debug level>]\n");
-        System.out.println("Usage: java GeneBankCreateBTree <cache> <btree file> <query file> <cache size> [<debug level>]\n");   // cache optional?
+        //System.out.println("Usage: java GeneBankSearch <degree> <gbk file> <sequence length> [<debug level>]\n");
+        System.out.println("Usage: java GeneBankSearch <cache> <btree file> <query file> <cache size> [<debug level>]\n");   // cache optional?
         System.exit(0);
     }
 

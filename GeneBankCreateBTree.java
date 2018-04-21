@@ -34,9 +34,10 @@ public class GeneBankCreateBTree {
 
         boolean useCache = false;
         int treeDegree = 0;
-        int sequenceLength = 0;
+        int subsequenceLength = 0;
         int cacheSize = 0;
         int debugLevel = 0;
+
 
         if ((args.length < MIN_ARGS_IN) || (args.length > MAX_ARGS_IN)) {
             System.out.println("ERROR: Incorrect arguments length; check usage.\n");
@@ -85,8 +86,8 @@ public class GeneBankCreateBTree {
 
         try {
             // Set up sequence length from user input
-            sequenceLength = Integer.parseInt(args[3]);
-            if ((sequenceLength < 1) || (sequenceLength > MAX_SEQUENCE_LENGTH)) {
+            subsequenceLength = Integer.parseInt(args[3]);
+            if ((subsequenceLength < 1) || (subsequenceLength > MAX_SEQUENCE_LENGTH)) {
                 System.out.println("ERROR: Check correct usage for <sequence length>.\n");
                 printGeneBankCreateBTreeUse();
             }
@@ -127,6 +128,8 @@ public class GeneBankCreateBTree {
             }
         }
 
+
+
         try {
             File gbk_file = new File(args[2]);
 
@@ -135,12 +138,15 @@ public class GeneBankCreateBTree {
             BufferedReader readBuffer = new BufferedReader(readFile);
             // Variable that holds the current line of text being processed
             String currentLine;
+            StringBuilder currentSequence = new StringBuilder();
+            String sequence;
+
             char currentChar;
             int currentLinePosition = 0;
             int currentSequencePosition = 0;
-            long currentSequence = 0;
 
             boolean parseRun = false;
+            boolean parseComplete = false;
 
 
             // Reads through gbk file to parse out the sequences
@@ -151,10 +157,11 @@ public class GeneBankCreateBTree {
                 if (parseRun) {
                     if (currentLine.startsWith("//")) {
                         parseRun = false;
-                        currentSequence = 0;
-                        currentSequencePosition = 0;
+                        parseComplete = true;
+                        //currentSequencePosition = 0;
                         break;
                     } else {
+
                         while (currentLinePosition < currentLine.length()) {
                             currentChar = currentLine.charAt(currentLinePosition); // toLower/Upper?
                             currentLinePosition++;
@@ -162,38 +169,51 @@ public class GeneBankCreateBTree {
                             // Inserts character into sequence
                             switch (currentChar) {
                                 case 'a':
-                                    currentSequence = (currentSequence | (BASE_A << currentSequencePosition));
-                                    currentSequencePosition += 2;
+                                    currentSequence.append(currentChar);
                                     break;
                                 case 't':
-                                    currentSequence = (currentSequence | (BASE_T << currentSequencePosition));
-                                    currentSequencePosition += 2;
+                                    currentSequence.append(currentChar);
                                     break;
                                 case 'c':
-                                    currentSequence = (currentSequence | (BASE_C << currentSequencePosition));
-                                    currentSequencePosition += 2;
+                                    currentSequence.append(currentChar);
                                     break;
                                 case 'g':
-                                    currentSequence = (currentSequence | (BASE_G << currentSequencePosition));
-                                    currentSequencePosition += 2;
+                                    currentSequence.append(currentChar);
                                     break;
                                 case 'n':
-                                    // Ends subsequence and resets parsing for a new sequence
-                                    currentSequencePosition = 0;
-                                    currentSequence = 0;
-                                    continue;
+                                    currentSequence.append(currentChar);
+                                    break;
+//                                    // Ends subsequence and resets parsing for a new subsequence (DONT need in parsing sequence)
+//                                    currentSequencePosition = 0;
+//                                    currentSequence.delete(0, currentSequence.length());
+//                                    continue;
                                 default:
                                     // Skips white space and number characters
                                     continue;
                             }
-                            if (currentSequencePosition >= sequenceLength) {
-                                // insert sequence
-                            }
                         }
                     }
                 }
-                // Resets line position for new line input
-                currentLinePosition = 0;
+                sequence = currentSequence.toString();
+                long key = 0;
+                int counter = 0;
+                while (currentSequencePosition < sequence.length()) {
+                    StringBuilder currentSubseq = new StringBuilder();
+
+                    while (counter < subsequenceLength) {
+                        currentSubseq.append(sequence.charAt(currentSequencePosition));
+
+                        counter++;
+                        currentSequencePosition++;
+                    }
+
+                    String parsedSubseq = currentSubseq.toString();
+                    counter = 0;
+
+                    key = subsequenceToLong(parsedSubseq, subsequenceLength);
+                    // Insert subsequence key into tree
+//                    myBTree.insert(key);
+                }
             }
             // Closes the File/Buffer Readers
             readBuffer.close();
@@ -250,14 +270,38 @@ public class GeneBankCreateBTree {
         System.exit(0);
     }
 
-    Long subsequenceToLong(String subsequence, int k) {
+//    static long getNextSubSequence(String seq, int k, int startIndex) {
+//        long key = 0;
+//
+//        int seqPosition = startIndex;
+//        int counter = 0;
+//        StringBuilder currentSubseq = new StringBuilder();
+//
+//
+//        // Parses out subsequences until end of sequence; if end of sequence or error return -1
+//        while (seqPosition < seq.length()){
+//            while (counter < k) {
+//                currentSubseq.append(seq.charAt(seqPosition));
+//
+//                seqPosition++;
+//                counter++;
+//            }
+//            counter = 0;
+//        }
+//
+//
+//
+//        return key;
+//    }
+
+    static long subsequenceToLong(String subseq, int k) {
         long key = 0x00;
         long temp = 0;
         int shift;
 
         for (int i = 0; i < k; i++) {
             shift = 2*i;
-            switch (subsequence.charAt(i)) {
+            switch (subseq.charAt(i)) {
                 case 'a':
                     temp = BASE_A << shift;
                     break;
@@ -276,7 +320,7 @@ public class GeneBankCreateBTree {
         return key;
     }
 
-    String longToSubsequence(long key, int k) {
+    static String longToSubsequence(long key, int k) {
         StringBuilder result = new StringBuilder();
         int shift;
         long temp;
