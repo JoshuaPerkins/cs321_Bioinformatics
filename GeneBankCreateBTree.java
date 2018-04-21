@@ -40,7 +40,7 @@ public class GeneBankCreateBTree {
 
         if ((args.length < MIN_ARGS_IN) || (args.length > MAX_ARGS_IN)) {
             System.out.println("ERROR: Incorrect arguments length; check usage.\n");
-            printProgramUse();
+            printGeneBankCreateBTreeUse();
         }
 
         int index;
@@ -59,12 +59,12 @@ public class GeneBankCreateBTree {
             }
             else {
                 System.out.println("ERROR: Check correct usage for <cache>.\n");
-                printProgramUse();
+                printGeneBankCreateBTreeUse();
             }
         }
         catch (NumberFormatException e) {
             System.out.println("ERROR: Incorrect input for <cache> : " + e.getMessage() + "\n\n");
-            printProgramUse();
+            printGeneBankCreateBTreeUse();
         }
 
         try {
@@ -72,7 +72,7 @@ public class GeneBankCreateBTree {
             treeDegree = Integer.parseInt(args[1]);
             if (treeDegree < 0) {
                 System.out.println("ERROR: Check correct usage for <degree>.\n");
-                printProgramUse();
+                printGeneBankCreateBTreeUse();
             }
             else if (treeDegree == 0) {
                 treeDegree = OPTIMUM_DEGREE;
@@ -80,7 +80,7 @@ public class GeneBankCreateBTree {
         }
         catch (NumberFormatException e) {
             System.out.println("ERROR: Incorrect input for <degree> : " + e.getMessage() + "\n\n");
-            printProgramUse();
+            printGeneBankCreateBTreeUse();
         }
 
         try {
@@ -88,12 +88,12 @@ public class GeneBankCreateBTree {
             sequenceLength = Integer.parseInt(args[3]);
             if ((sequenceLength < 1) || (sequenceLength > MAX_SEQUENCE_LENGTH)) {
                 System.out.println("ERROR: Check correct usage for <sequence length>.\n");
-                printProgramUse();
+                printGeneBankCreateBTreeUse();
             }
         }
         catch (NumberFormatException e) {
             System.out.println("ERROR: Incorrect input for <sequence length> : " + e.getMessage() + "\n\n");
-            printProgramUse();
+            printGeneBankCreateBTreeUse();
         }
 
         try {
@@ -101,11 +101,11 @@ public class GeneBankCreateBTree {
             cacheSize = Integer.parseInt(args[4]);
             if (cacheSize < 1) {
                 System.out.println("ERROR: Check correct usage for <cache size>.\n");
-                printProgramUse();
+                printGeneBankCreateBTreeUse();
             }
         } catch (NumberFormatException e) {
             System.out.println("ERROR: Incorrect input for <cache size> : " + e.getMessage() + "\n\n");
-            printProgramUse();
+            printGeneBankCreateBTreeUse();
         }
 
         if (args.length > MIN_ARGS_IN) {
@@ -119,11 +119,11 @@ public class GeneBankCreateBTree {
                         break;
                     default:
                         System.out.println("ERROR: Check correct usage for <cache size>.\n");
-                        printProgramUse();
+                        printGeneBankCreateBTreeUse();
                 }
             } catch (NumberFormatException e) {
                 System.out.println("ERROR: Incorrect input for <cache size> : " + e.getMessage() + "\n\n");
-                printProgramUse();
+                printGeneBankCreateBTreeUse();
             }
         }
 
@@ -244,7 +244,7 @@ public class GeneBankCreateBTree {
         }
     }
 
-    private static void printProgramUse() {
+    private static void printGeneBankCreateBTreeUse() {
         //System.out.println("Usage: java GeneBankCreateBTree <degree> <gbk file> <sequence length> [<debug level>]\n");
         System.out.println("Usage: java GeneBankCreateBTree <cache> <degree> <gbk file> <sequence length> <cache size> [<debug level>]\n");   // cache optional?
         System.exit(0);
