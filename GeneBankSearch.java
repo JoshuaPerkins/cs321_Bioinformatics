@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.ArrayList;
 
 /**
  * GeneBankSearch class for ...
@@ -19,6 +20,8 @@ public class GeneBankSearch {
         boolean useCache = false;
         int cacheSize = 0;
         int debugLevel = 0;
+
+        int subsequenceLength;
 
 
         if ((args.length < MIN_ARGS_IN) || (args.length > MAX_ARGS_IN)) {
@@ -90,12 +93,32 @@ public class GeneBankSearch {
             BufferedReader readBuffer = new BufferedReader(readFile);
             // Variable that holds the current line of text being processed
             String currentLine;
+            ArrayList<String> queryArray = new ArrayList<String>();
+
             char currentChar;
             int currentLinePosition = 0;
             int currentSequencePosition = 0;
             long currentSequence = 0;
 
             boolean parseRun = false;
+
+            while ((currentLine = readBuffer.readLine()) != null) {  // trim? toLower/Upper?
+                    queryArray.add(currentLine);
+            }
+
+            subsequenceLength = queryArray.get(0).length();
+
+
+            for (int i = 0; i < queryArray.size(); i++) {
+                long key = GeneBankCreateBTree.subsequenceToLong(queryArray.get(i), subsequenceLength);
+
+                // Searches for key in BTree and prints frequency information
+//                if (BTree.find(key)) {
+//                    //Print frequency info
+//                    printFrequencyInfo();
+//                }
+            }
+
 
 
             // Closes the File/Buffer Readers
@@ -120,6 +143,10 @@ public class GeneBankSearch {
         //System.out.println("Usage: java GeneBankSearch <degree> <gbk file> <sequence length> [<debug level>]\n");
         System.out.println("Usage: java GeneBankSearch <cache> <btree file> <query file> <cache size> [<debug level>]\n");   // cache optional?
         System.exit(0);
+    }
+
+    private static void printFrequencyInfo() {
+        System.out.println();
     }
 
 }

@@ -150,7 +150,7 @@ public class GeneBankCreateBTree {
 
 
             // Reads through gbk file to parse out the sequences
-            while ((currentLine = readBuffer.readLine().trim()) != null) {  // trim? toLower/Upper?
+            while ((currentLine = readBuffer.readLine()) != null) {  // trim? toLower/Upper?
                 if (currentLine.startsWith("ORIGIN")) {
                     parseRun = true;
                 }
