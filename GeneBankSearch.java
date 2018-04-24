@@ -110,7 +110,7 @@ public class GeneBankSearch {
 
 
             for (int i = 0; i < queryArray.size(); i++) {
-                long key = GeneBankCreateBTree.subsequenceToLong(queryArray.get(i), subsequenceLength);
+                long key = GeneConvert.subsequenceToLong(queryArray.get(i), subsequenceLength);
 
                 // Searches for key in BTree and prints frequency information
 //                if (BTree.find(key)) {
