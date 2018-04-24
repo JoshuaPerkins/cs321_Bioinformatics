@@ -11,12 +11,13 @@ import java.io.*;
  */
 public class GeneBankCreateBTree {
 
-    static final long BASE_A = 0b00L;
-    static final long BASE_T = 0b11L;
-    static final long BASE_C = 0b01L;
-    static final long BASE_G = 0b10L;
-
-    static final char geneMap[] = {(char)BASE_A, (char)BASE_C, (char)BASE_G, (char)BASE_T};
+    // NOT USED?
+//    static final long BASE_A = 0b00L;
+//    static final long BASE_T = 0b11L;
+//    static final long BASE_C = 0b01L;
+//    static final long BASE_G = 0b10L;
+//
+//    static final char geneMap[] = {(char)BASE_A, (char)BASE_C, (char)BASE_G, (char)BASE_T};
 
     public static void main(String[] args) {
 
