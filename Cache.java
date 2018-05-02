@@ -34,6 +34,7 @@ public class Cache {
             secondCacheSize = size2;
         }
 
+
         public void addObject(Object aword) {
             if(getObject(aword)) {
                 return;
