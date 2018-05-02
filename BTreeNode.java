@@ -28,12 +28,28 @@ public class BTreeNode {
             this.degree = degree;
         }
         else{
-            this.degree = 170;
+            this.degree = 170; // default degree
         }
         this.children = new long[2 * degree];
         this.keys = new long[2 * degree - 1];
         this.freqency = new long[2 * degree - 1];
     }
+
+    /**
+     * Checking node for children
+     * @param
+     * @param index
+     * @return
+     */
+    public boolean isLeaf(int index){
+        if(this.children[index] == 0){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
 
     /**
      * Method for writing a node to a binary file
@@ -69,5 +85,10 @@ public class BTreeNode {
     public void setFileOffset(long fileOffset, RandomAccessFile myFile) throws IOException{
         this.fileOffset = fileOffset;
         myFile.seek(fileOffset);
+    }
+    
+
+    public long getFrequency(){
+        return this.freqency[1];
     }
 }
