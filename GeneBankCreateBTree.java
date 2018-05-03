@@ -10,14 +10,10 @@ import java.io.*;
  * Spring 2018 - Steven Cutchin
  */
 public class GeneBankCreateBTree {
-
-    static final long BASE_A = 0b00L;
-    static final long BASE_T = 0b11L;
-    static final long BASE_C = 0b01L;
-    static final long BASE_G = 0b10L;
-
-    static final char geneMap[] = {(char)BASE_A, (char)BASE_C, (char)BASE_G, (char)BASE_T};
-
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
 
         final int MIN_ARGS_IN = 5;
@@ -135,7 +131,7 @@ public class GeneBankCreateBTree {
         // Checks debug level and prints to file accordingly
         try {
             if (debugLevel == 1) {
-                // my solution template
+                  // my solution template
 //                // Saves the stdout to be reset afterwards
 //                PrintStream stdout = System.out;
 //                // Creates the output stream and sets the standard output to it
@@ -165,6 +161,9 @@ public class GeneBankCreateBTree {
         }
     }
 
+    /**
+     *
+     */
     private static void printGeneBankCreateBTreeUse() {
         //System.out.println("Usage: java GeneBankCreateBTree <degree> <gbk file> <sequence length> [<debug level>]\n");
         System.out.println("Usage: java GeneBankCreateBTree <cache> <degree> <gbk file> <sequence length> <cache size> [<debug level>]\n");   // cache optional?
