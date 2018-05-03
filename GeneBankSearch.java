@@ -11,7 +11,10 @@ import java.util.ArrayList;
  * Spring 2018 - Steven Cutchin
  */
 public class GeneBankSearch {
-
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
 
         final int MIN_ARGS_IN = 4;
@@ -139,12 +142,16 @@ public class GeneBankSearch {
 
     }
 
+    /**
+     *
+     */
     private static void printGeneBankSearchUse() {
         //System.out.println("Usage: java GeneBankSearch <degree> <gbk file> <sequence length> [<debug level>]\n");
         System.out.println("Usage: java GeneBankSearch <cache> <btree file> <query file> <cache size> [<debug level>]\n");   // cache optional?
         System.exit(0);
     }
 
+    /**/
     private static void printFrequencyInfo() {
         System.out.println();
     }
