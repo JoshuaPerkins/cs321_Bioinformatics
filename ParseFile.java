@@ -18,7 +18,7 @@ class ParseFile {
     /**
      * Parses the gbk file into sequences in preperation to be converted to subsequences and added into the BTree.
      *
-     * @param gbk_file The file to be parsed.
+     * @param gbk_file          The file to be parsed.
      * @param subsequenceLength The substring length.
      */
     static void parseGbk(File gbk_file, int subsequenceLength, BTree myBTree) {
@@ -111,24 +111,24 @@ class ParseFile {
             readBuffer.close();
             readFile.close();
         }
-    // Catches exception if file not found
-        catch(FileNotFoundException e) {
-        System.out.println("ERROR: Cannot open file : " + e.getMessage() + "\n\n");
-        System.out.println("Make sure that the gbk file is in the same folder as the other java files for this project.\n");
-        System.exit(0);
-    }
-    // Catches exception if error closing readers
+        // Catches exception if file not found
+        catch (FileNotFoundException e) {
+            System.out.println("ERROR: Cannot open file : " + e.getMessage() + "\n\n");
+            System.out.println("Make sure that the gbk file is in the same folder as the other java files for this project.\n");
+            System.exit(0);
+        }
+        // Catches exception if error closing readers
         catch (IOException e) {
-        System.out.println("ERROR: When closing Buffer/File : " + e.getMessage() + "\n\n");
-        System.exit(0);
+            System.out.println("ERROR: When closing Buffer/File : " + e.getMessage() + "\n\n");
+            System.exit(0);
+        }
     }
-}
 
     /**
      * Parses the sequences into subsequences and adds them into the BTree.
      *
      * @param seq The DNA sequence parsed from the gbk file.
-     * @param k The subsequence length.
+     * @param k   The subsequence length.
      */
     private static void parseSubsequences(String seq, int k, BTree myBTree) {
         // Variables used in method
@@ -165,8 +165,7 @@ class ParseFile {
                 }
                 // Deletes first character from subsequence to prepare for next subsequence
                 currentSubseq.deleteCharAt(0);
-            }
-            else {
+            } else {
                 // Parsed subsequence converted to key format
                 key = GeneConvert.subsequenceToLong(parsedSubseq, k);
 
@@ -181,7 +180,7 @@ class ParseFile {
                 }
                 // Insert subsequence key into tree if not testing
                 if (!parseTest) {
-                myBTree.insert(key);
+                    myBTree.insert(key);
                 }
                 // Deletes first character from subsequence to prepare for next subsequence
                 currentSubseq.deleteCharAt(0);
@@ -193,5 +192,57 @@ class ParseFile {
             System.out.println("*** Completed Parse: " + parseNum + " ***");
             parseNum++;
         }
+    }
+
+    /**
+     * Parses the key length and degree from a BTree file name.
+     *
+     * @param btree_name The name of the BTree file.
+     * @param type The expected return value type; either subsequence length or degree.
+     * @return The parsed integer value from the filename.
+     */
+    static int parseKeyDegree(String btree_name, int type) {
+        StringBuilder currentParse = new StringBuilder();
+        int value = 0;
+
+        // Variables to parse key length and degree
+        char currentChar;
+        int currentLinePosition = 0;
+        int sectionCount = 0;
+
+        // Continues while more characters are present in the btree file name
+        while (currentLinePosition < btree_name.length()) {
+            // Sets current character from index
+            currentChar = btree_name.charAt(currentLinePosition);
+            currentLinePosition++;
+
+            // Parses the sequence length
+            if (type == 0) {
+                if ((sectionCount == 4) && (currentChar != '.')) {
+                    currentParse.append(currentChar);
+                }
+            }
+            // Parses the degree
+            if (type == 1) {
+                if (sectionCount == 5) {
+                    currentParse.append(currentChar);
+                }
+            }
+            // Counts the name sections denoted by '.'
+            if (currentChar == '.') {
+                sectionCount++;
+            }
+        }
+
+        try {
+            // Parses the integer values from the key length and degree strings
+            value = Integer.parseInt(currentParse.toString());
+        }
+        catch (NumberFormatException e) {
+            System.out.println("ERROR: Cannot parse value of key length/degree from BTree filename : " + e.getMessage() + "\n\n");
+            System.exit(0);
+        }
+        // returns value based on type input
+        return value;
     }
 }

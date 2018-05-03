@@ -26,6 +26,8 @@ public class GeneBankSearch {
         int cacheSize;
         int debugLevel;
         int subsequenceLength;
+        int subsequenceLengthCheck;
+        int treeDegree;
 
         // Checks for correct argument length
         if ((args.length < MIN_ARGS_IN) || (args.length > MAX_ARGS_IN)) {
@@ -86,6 +88,7 @@ public class GeneBankSearch {
         }
 
         try {
+            String btree_filename = (args[1]);
             File btree_file = new File(args[1]);
             File query_file = new File(args[2]);
 
@@ -94,26 +97,43 @@ public class GeneBankSearch {
             BufferedReader readBuffer = new BufferedReader(readFile);
             // Variable that holds the current line of text being processed
             String currentLine;
-            ArrayList<String> queryArray = new ArrayList<String>();
+            ArrayList<String> queryArray = new ArrayList<>();
 
-            char currentChar;
-            int currentLinePosition = 0;
             int currentSequencePosition = 0;
             long currentSequence = 0;
 
             boolean parseRun = false;
 
-            while ((currentLine = readBuffer.readLine()) != null) {  // trim? toLower/Upper?
-                    queryArray.add(currentLine);
+            // Continues while lines exist in query file and adds them to an array
+            while ((currentLine = readBuffer.readLine()) != null) {
+                    // Lower case is expected when parsing
+                    queryArray.add(currentLine.toLowerCase());
             }
 
+            // Sets subsequence length based on query line length
             subsequenceLength = queryArray.get(0).length();
 
+            // Parses the integer values from the key length and degree strings
+            subsequenceLengthCheck = ParseFile.parseKeyDegree(btree_filename, 0);
+            treeDegree = ParseFile.parseKeyDegree(btree_filename, 1);
+
+            // Checks that query and BTree files match subsequence length
+            if (subsequenceLength != subsequenceLengthCheck) {
+                System.out.println("ERROR: BTree & query file subsequence lengths (k) do not match.");
+                System.exit(0);
+            }
+
+            // Creates new BTree
+//            BTree myBTree = new BTree (treeDegree, btree_file, useCache, cacheSize);
+
+
+            // While items exist in query array convert them to keys and search BTree
             for (int i = 0; i < queryArray.size(); i++) {
+                // Convert query entry to key
                 long key = GeneConvert.subsequenceToLong(queryArray.get(i), subsequenceLength);
 
                 // Searches for key in BTree and prints frequency information
-//                if (BTree.find(key)) {
+//                if (myBTree.find(key)) { // add , 1 to denote printing?
 //                    //Print frequency info
 //                    printFrequencyInfo();
 //                }
@@ -125,7 +145,7 @@ public class GeneBankSearch {
         // Catches exception if file not found
         catch(FileNotFoundException e) {
             System.out.println("ERROR: Cannot open file : " + e.getMessage() + "\n\n");
-            System.out.println("Make sure that the btree / query file is in the same folder as the HashTest and other java files for this project.");
+            System.out.println("Make sure that the btree / query file is in the same folder as the other java files for this project.");
             System.exit(0);
         }
         // Catches exception if error closing readers
