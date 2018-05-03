@@ -13,7 +13,7 @@ class ParseFile {
 
     // Variables used when performing unit tests
     static boolean parseTest = false;   // When testing is set to true
-    private static int parseNum = 1;            // Current ORIGIN // DNA sequence parse
+    private static int parseNum = 1;    // Current ORIGIN // DNA sequence parse
 
     /**
      * Parses the gbk file into sequences in preperation to be converted to subsequences and added into the BTree.
@@ -21,7 +21,7 @@ class ParseFile {
      * @param gbk_file The file to be parsed.
      * @param subsequenceLength The substring length.
      */
-    static void parseGbk(File gbk_file, int subsequenceLength) {
+    static void parseGbk(File gbk_file, int subsequenceLength, BTree myBTree) {
 
         try {
             // Creates the File/Buffered Readers to process gbk file
@@ -38,7 +38,7 @@ class ParseFile {
             boolean parseRun = false;
 
             // Reads through gbk file to parse out the sequences
-            while ((currentLine = readBuffer.readLine()) != null) {  // toLower? ---------------------------------------------
+            while ((currentLine = readBuffer.readLine()) != null) {
                 if (currentLine.startsWith("ORIGIN")) {
                     // Unit testing print statements
                     if (parseTest) {
@@ -64,12 +64,13 @@ class ParseFile {
                         // Resets the parsing variable to be able to check for another sequence
                         parseRun = false;
                         // Parse subsequences to add to BTree once // is found denoting the end of a DNA sequence
-                        parseSubsequences(sequence, subsequenceLength);
+                        parseSubsequences(sequence, subsequenceLength, myBTree);
                     } else {
                         // Loops while characters in the line exist
                         while (currentLinePosition < currentLine.length()) {
                             // Sets current character to char from the position in current line
-                            currentChar = currentLine.charAt(currentLinePosition); // toLower? -----------------------------------------------------------
+                            // Characters should be in lowercase to check correctly against switch
+                            currentChar = currentLine.toLowerCase().charAt(currentLinePosition);
                             // Increments line position for character indexing
                             currentLinePosition++;
                             // Inserts character into sequence if they are 'a','t','c','g', or 'n'
@@ -113,7 +114,7 @@ class ParseFile {
     // Catches exception if file not found
         catch(FileNotFoundException e) {
         System.out.println("ERROR: Cannot open file : " + e.getMessage() + "\n\n");
-        System.out.println("Make sure that the gbk file is in the same folder as the HashTest and other java files for this project.");
+        System.out.println("Make sure that the gbk file is in the same folder as the other java files for this project.\n");
         System.exit(0);
     }
     // Catches exception if error closing readers
@@ -129,7 +130,7 @@ class ParseFile {
      * @param seq The DNA sequence parsed from the gbk file.
      * @param k The subsequence length.
      */
-    private static void parseSubsequences(String seq, int k) {
+    private static void parseSubsequences(String seq, int k, BTree myBTree) {
         // Variables used in method
         long key;
         int counter = 0;
@@ -180,7 +181,7 @@ class ParseFile {
                 }
                 // Insert subsequence key into tree if not testing
                 if (!parseTest) {
-//                myBTree.insert(key);
+                myBTree.insert(key);
                 }
                 // Deletes first character from subsequence to prepare for next subsequence
                 currentSubseq.deleteCharAt(0);
