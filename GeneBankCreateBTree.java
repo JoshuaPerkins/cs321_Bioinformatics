@@ -119,7 +119,7 @@ public class GeneBankCreateBTree {
                         printGeneBankCreateBTreeUse();
                 }
             } catch (NumberFormatException e) {
-                System.out.println("ERROR: Incorrect input for <cache size> : " + e.getMessage() + "\n\n");
+                System.out.println("ERROR: Incorrect input for [<debug level>] : " + e.getMessage() + "\n\n");
                 printGeneBankCreateBTreeUse();
             }
         }

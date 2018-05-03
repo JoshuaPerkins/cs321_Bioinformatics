@@ -24,10 +24,10 @@ public class GeneBankSearch {
         boolean useCache = false;
         // Variables defining characteristics of program
         int cacheSize;
-        int debugLevel;
+        int debugLevel = 0;
         int subsequenceLength;
         int subsequenceLengthCheck;
-        int treeDegree;
+        int treeDegree = 0;
 
         // Checks for correct argument length
         if ((args.length < MIN_ARGS_IN) || (args.length > MAX_ARGS_IN)) {
@@ -75,14 +75,12 @@ public class GeneBankSearch {
                 switch (debugLevel) {
                     case 0:
                         break;
-                    case 1:
-                        break;
                     default:
-                        System.out.println("ERROR: Check correct usage for <cache size>.\n");
+                        System.out.println("ERROR: Check correct usage for [<debug level>].\n");
                         printGeneBankSearchUse();
                 }
             } catch (NumberFormatException e) {
-                System.out.println("ERROR: Incorrect input for <cache size> : " + e.getMessage() + "\n\n");
+                System.out.println("ERROR: Incorrect input for [<debug level>] : " + e.getMessage() + "\n\n");
                 printGeneBankSearchUse();
             }
         }
@@ -98,11 +96,6 @@ public class GeneBankSearch {
             // Variable that holds the current line of text being processed
             String currentLine;
             ArrayList<String> queryArray = new ArrayList<>();
-
-            int currentSequencePosition = 0;
-            long currentSequence = 0;
-
-            boolean parseRun = false;
 
             // Continues while lines exist in query file and adds them to an array
             while ((currentLine = readBuffer.readLine()) != null) {
@@ -152,6 +145,12 @@ public class GeneBankSearch {
         catch (IOException e) {
             System.out.println("ERROR: When closing Buffer/File : " + e.getMessage() + "\n\n");
             System.exit(0);
+        }
+
+        // ####################################################
+        // Needed?
+        if (debugLevel == 0) {
+
         }
     }
 
