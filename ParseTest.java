@@ -29,6 +29,6 @@ public class ParseTest {
         File gbk_file = new File(args[1]);
 
         // Parses subsequences from found DNA sequence strings
-        ParseFile.parseGbk(gbk_file, k);
+        ParseFile.parseGbk(gbk_file, k, null);
     }
 }

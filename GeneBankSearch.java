@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.ArrayList;
 
 /**
- * GeneBankSearch class for ...
+ * GeneBankSearch class for searching a BTree for subsequences from a query file.
  *
  * @author JPerkins
  * Date: April 13, 2018
@@ -12,34 +12,30 @@ import java.util.ArrayList;
  */
 public class GeneBankSearch {
     /**
+     * Main method to search a BTree according to subsequences listed in a query file.
      *
-     * @param args
+     * @param args The user arguments for the program.
      */
     public static void main(String[] args) {
-
+        // Variables to define min/max arguments expected
         final int MIN_ARGS_IN = 4;
         final int MAX_ARGS_IN = 5;
-
+        // Using cache boolean
         boolean useCache = false;
-        int cacheSize = 0;
-        int debugLevel = 0;
-
+        // Variables defining characteristics of program
+        int cacheSize;
+        int debugLevel;
         int subsequenceLength;
 
-
+        // Checks for correct argument length
         if ((args.length < MIN_ARGS_IN) || (args.length > MAX_ARGS_IN)) {
             System.out.println("ERROR: Incorrect arguments length; check usage.\n");
             printGeneBankSearchUse();
         }
 
-        int index;
-
-        for (index = 0; index < args.length; index++) {
-            // try parsing and error dependent on index
-        }
-
+        // Sets cache boolean
         try {
-            // Set up sequence length from user input
+            // Set up cache usage from user input
             if (Integer.parseInt(args[0]) == 1) {
                 useCache = true;
             }
@@ -56,8 +52,9 @@ public class GeneBankSearch {
             printGeneBankSearchUse();
         }
 
+        // Sets cache size
         try {
-            // Set up sequence length from user input
+            // Set up cache size from user input
             cacheSize = Integer.parseInt(args[3]);
             if (cacheSize < 1) {
                 System.out.println("ERROR: Check correct usage for <cache size>.\n");
@@ -68,9 +65,10 @@ public class GeneBankSearch {
             printGeneBankSearchUse();
         }
 
+        // Sets debug level if argument length accounts for it
         if (args.length > MIN_ARGS_IN) {
             try {
-                // Set up sequence length from user input
+                // Set up debug level from user input
                 debugLevel = Integer.parseInt(args[5]);
                 switch (debugLevel) {
                     case 0:
@@ -111,7 +109,6 @@ public class GeneBankSearch {
 
             subsequenceLength = queryArray.get(0).length();
 
-
             for (int i = 0; i < queryArray.size(); i++) {
                 long key = GeneConvert.subsequenceToLong(queryArray.get(i), subsequenceLength);
 
@@ -121,9 +118,6 @@ public class GeneBankSearch {
 //                    printFrequencyInfo();
 //                }
             }
-
-
-
             // Closes the File/Buffer Readers
             readBuffer.close();
             readFile.close();
@@ -139,15 +133,19 @@ public class GeneBankSearch {
             System.out.println("ERROR: When closing Buffer/File : " + e.getMessage() + "\n\n");
             System.exit(0);
         }
-
     }
 
     /**
-     *
+     * Prints the correct usage for GeneBankSearch.
      */
     private static void printGeneBankSearchUse() {
         //System.out.println("Usage: java GeneBankSearch <degree> <gbk file> <sequence length> [<debug level>]\n");
         System.out.println("Usage: java GeneBankSearch <cache> <btree file> <query file> <cache size> [<debug level>]\n");   // cache optional?
+        System.out.println("No cache = 0; Cache = 1.\n");
+        System.out.println("BTree file must be an existing BTree stored on disk.\n");
+        System.out.println("Query file must be an existing query file.\n");
+        System.out.println("Cache size must be a positive integer.\n");
+        System.out.println("Debug level 0 provides output of queries to stdout.\n");
         System.exit(0);
     }
 
