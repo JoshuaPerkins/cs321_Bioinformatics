@@ -15,6 +15,7 @@ public class BTreeNode {
     // class variables
     long fileOffset;
     int degree;
+    long parent[]; // parent pointer
     long children[]; // array of children
     long keys[]; // array of keys
     long freqency[];
@@ -42,9 +43,8 @@ public class BTreeNode {
      * @return true/false
      */
     public boolean isLeaf(){
-        if(this.children.length == 0){
-            this.isLeaf = true;
-            return this.isLeaf;
+        if(this.isLeaf){
+            return true;
         }
         else{
             return false;
