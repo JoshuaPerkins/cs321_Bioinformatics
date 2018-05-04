@@ -18,8 +18,8 @@ public class BTreeNode {
     long parent; // parent pointer
     long children[]; // array of children
     TreeObject treeObject[]; // tree object array
-    long numKeys; // key count
-    long numChildren; // children count
+    int numKeys; // key count
+    int numChildren; // children count
     boolean isLeaf; // leaf checker
 
     /**
@@ -40,6 +40,14 @@ public class BTreeNode {
      */
     public TreeObject getTreeObject(int index){
         return treeObject[index];
+    }
+
+    /**
+     * returns number of keys
+     * @return
+     */
+    public int getNumKeys(){
+        return numKeys;
     }
 
     /**
@@ -112,6 +120,7 @@ public class BTreeNode {
                 return newNode;
             }
         }
+
 
         newNode = new BTreeNode(this.degree); //default degree, change.
         TreeObject obj = null;
