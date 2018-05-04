@@ -139,7 +139,14 @@ public class GeneBankCreateBTree {
         String btree_file = (gbk_file + ".btree.data." + subsequenceLength + "." + treeDegree);
 
         // Creates BTree
-        BTree myBTree = new BTree(treeDegree, btree_file, useCache, cacheSize);
+        BTree myBTree;
+        try {
+            myBTree = new BTree(treeDegree, btree_file, useCache, cacheSize);
+        }
+        catch (IOException e) {
+            System.out.println("ERROR: When creating BTree : " + e.getMessage() + "\n\n");
+            System.exit(0);
+        }
 
         // Parses gbk file and adds subsequences to BTree
         ParseFile.parseGbk(gbk_file, subsequenceLength, myBTree);
