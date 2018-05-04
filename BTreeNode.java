@@ -17,7 +17,7 @@ public class BTreeNode {
     long children[];
     long keys[];
     long freqency[];
-    long numKeys;
+    int numKeys;
     boolean isLeaf;
 
     /**
