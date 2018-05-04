@@ -6,19 +6,21 @@
 *No matter the sub sequence size, write 64 bits to array
 *Node size = 4096 bytes
 *Node Metadata
-	1. parent_pointer - 4 bytes 
+	1. parent_pointer - 4 bytes
 	2. number_of_children - 4 bytes
-	3. isLeaf - 1 bytes (15 empty)
-	- 9 bytes total, 24 bytes word aligned
+	3. number_of_keys - 4 bytes
+	4. fileOffset - 4 bytes
+	3. isLeaf - 1 bytes
+	- 24 word aligned
 *Key size = 64 bits = 8 bytes
 *meta-data of single node + size of pointer (to parent) + size of key*(2t - 1) + size of pointer (to children) * 2t = 4096
-	- 12 + 12(2t-1) + 4*2t = 4096
-	- 32t = 4096
-	- t = 128
+	- 24 + 12(2t-1) + 4*2t = 4096
+	- 32t + 12 = 4096
+	- t = 127
 *Node Structure
 	1. Metadata (24 Bytes, offset = 0)
-	2. 255 Keys(Tree Objects) (3060 Bytes, offset = 24)
-	3. 256 Children Pointers (1024 Bytes, offset = 3084)
+	2. 253 Keys(Tree Objects) (3036 Bytes, offset = 24)
+	3. 254 Children Pointers (1016 Bytes, offset = 3064)
 
 
 A = 00
