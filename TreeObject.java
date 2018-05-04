@@ -31,9 +31,7 @@ public class TreeObject {
     }
 
     // Increments frequency
-    public void freqIncrement(){
-        freq++;
-    }
+    public void freqIncrement(){ this.freq++; }
 
     // Returns current frequency
     public int getFreq(){
