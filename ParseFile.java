@@ -131,7 +131,7 @@ class ParseFile {
      * @param seq The DNA sequence parsed from the gbk file.
      * @param k   The subsequence length.
      */
-    private static void parseSubsequences(String seq, int k, BTree myBTree) {
+    private static void parseSubsequences(String seq, int k, BTree myBTree) throws IOException {
         // Variables used in method
         long key;
         int counter = 0;
@@ -181,7 +181,7 @@ class ParseFile {
                 }
                 // Insert subsequence key into tree if not testing
                 if (!parseTest) {
-                    myBTree.insert(key);
+                    myBTree.insert(4096, key);
                 }
                 // Deletes first character from subsequence to prepare for next subsequence
                 currentSubseq.deleteCharAt(0);
