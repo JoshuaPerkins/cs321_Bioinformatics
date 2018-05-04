@@ -1,7 +1,7 @@
 import java.io.*;
 
 /**
- * ParseTest class for performing tests to see if the substrings are being parsed correctly.
+ * ParseTestGbk class for performing tests to see if the substrings are being parsed correctly.
  *
  * @author JPerkins
  * Date: April 13, 2018
@@ -9,7 +9,7 @@ import java.io.*;
  * Class: CS 321 - Data Structures
  * Spring 2018 - Steven Cutchin
  */
-public class ParseTest {
+public class ParseTestGbk {
 
     /**
      * Tests the parsing of substrings from gbk files.

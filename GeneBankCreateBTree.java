@@ -119,7 +119,7 @@ public class GeneBankCreateBTree {
                         printGeneBankCreateBTreeUse();
                 }
             } catch (NumberFormatException e) {
-                System.out.println("ERROR: Incorrect input for <cache size> : " + e.getMessage() + "\n\n");
+                System.out.println("ERROR: Incorrect input for [<debug level>] : " + e.getMessage() + "\n\n");
                 printGeneBankCreateBTreeUse();
             }
         }
@@ -133,10 +133,10 @@ public class GeneBankCreateBTree {
         }
 
         // Creates BTree file name
-        String treeFile = (gbk_file + ".btree.data." + subsequenceLength + "." + treeDegree);
+        String btree_file = (gbk_file + ".btree.data." + subsequenceLength + "." + treeDegree);
 
         // Creates BTree
-//        BTree myBTree = new BTree(treeDegree, treeFile, useCache, cacheSize);
+//        BTree myBTree = new BTree(treeDegree, btree_file, useCache, cacheSize);
 
         // Parses gbk file and adds subsequences to BTree
 //        ParseFile.parseGbk(gbk_file, subsequenceLength, myBTree);
