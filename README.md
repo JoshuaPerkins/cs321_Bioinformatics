@@ -75,20 +75,26 @@ TESTING:
  implementation of the DNA sequence and subsequence parsing, as well as the key
  conversions from Strings to longs and vice versa. 
  
- **-- * -- THIS IS A TEMPLATE THAT NEEDS REPLACING -- * --**
+ The main programs were tested using cache sizes of 100 and 500. Their respective
+ run-times, in seconds, are as follows:
  
- The sample_results file was used to compare the generated output to an example
- output. The provided sample can not specifically correlate to the output as the
- number of process generated and the timing of their generation is random by the
- nature of the program. Testing was done looking at the code manually and making
- sure that the queue structure was correct and the generated output followed the 
- priority queue's intended purpose. 
+ * GeneBankCreateBTree:
+   + Cache Size 100: ***--__FINISH__--***
+   + Cache Size 500: ***--__FINISH__--***
+ 
+  * GeneBankSearch:
+    + Cache Size 100: ***--__FINISH__--***
+    + Cache Size 500: ***--__FINISH__--***
   
  There are no known bugs/issues with the code or project.
 
 DISCUSSION:
  
+ The GeneBankCreateBTree and GeneBankSearch programs were designed to be used 
+ with the cache class implemented; so the program arguments shown in Section 5
+ of the project write-up were used. 
  
+  **-- * -- THIS IS A TEMPLATE THAT NEEDS REPLACING -- * --**
  
  The random aspects of each processes process time and priority level made the 
  task of testing the simulations functionality more difficult; but by stepping
