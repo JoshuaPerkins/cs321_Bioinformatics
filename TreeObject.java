@@ -15,9 +15,9 @@ public class TreeObject {
     int freq;
 
     // Sets initial values for key, and frequency
-    public TreeObject( long key, int freq){
+    public TreeObject( long key){
         this.key = key;
-        this.freq = freq;
+        this.freq = 1;
     }
 
     // Sets key

@@ -11,30 +11,26 @@
 import java.io.*;
 
 public class BTreeNode {
+
     // class variables
     long fileOffset;
     int degree;
-    long parent[]; // parent pointer
+    long parent; // parent pointer
     long children[]; // array of children
-    long keys[]; // array of keys
-    long freqency[];
+    Object treeObject[]; // tree object array
     long numKeys; // key count
     long numChildren; // children count
     boolean isLeaf; // leaf checker
 
     /**
-     * Constructor method for a BTreeNode
+     * Constructor for BTreeNode
+     * key, and frequency are contained in TreeObject
+     * @param degree
      */
     public BTreeNode(int degree){
-        if(degree > 0) {
-            this.degree = degree;
-        }
-        else{
-            this.degree = 170; // default degree
-        }
+        this.degree = degree;
+        this.treeObject = new TreeObject[2 * degree - 1]; // treeObject holds the keys and frequency
         this.children = new long[2 * degree]; // max number of children
-        this.keys = new long[2 * degree - 1]; // max number of keys
-        this.freqency = new long[2 * degree - 1]; // array to hold frequency
     }
 
     /**
@@ -55,12 +51,28 @@ public class BTreeNode {
      * @return true/false
      */
     public boolean isFull(){
-        if(numKeys == this.keys.length){
+        if(numKeys == this.treeObject.length){
             return true;
         }
         else{
             return false;
         }
+    }
+
+    /**
+     *
+     * @return returns parents
+     */
+    public long getParent(){
+        return this.parent;
+    }
+
+    /**
+     * Setting the file offset to fileOS
+     * @param fileOS
+     */
+    public void setFileOffset(int fileOS){
+        this.fileOffset = fileOS;
     }
 
     /**
@@ -80,14 +92,32 @@ public class BTreeNode {
      * Method for reading a node from a binary file
      * @param myFile: file to be read from
      */
-    public long readNode(RandomAccessFile myFile) throws IOException{
-        myFile.seek(fileOffset);
-        long afo = myFile.readLong();
-        int i;
-        for(i=0; i < this.children.length; i++){
-            this.children[i] = myFile.readLong();
+    public BTreeNode readNode(RandomAccessFile myFile) throws IOException{
+        BTreeNode newNode = null;
+        // checking things and stuff
+
+        // checking cache for node before anything else.
+        if(bTreeCache != null){
+            newNode = readNode(offset);
+            if(newNode != null){
+                return newNode;
+            }
         }
-        return afo;
+
+        newNode = new BTreeNode(this.degree); //default degree, change.
+        TreeObject obj = null;
+
+
+
+        int i = 0;
+        return newNode;
+        //myFile.seek(fileOffset);
+        //long afo = myFile.readLong();
+        //int i;
+        //for(i=0; i < this.children.length; i++){
+         //   this.children[i] = myFile.readLong();
+        //}
+        //return afo;
     }
 
     /**
@@ -99,8 +129,23 @@ public class BTreeNode {
         myFile.seek(fileOffset);
     }
 
-    public long getFreqency(int i){
-        return freqency[i];
+    /**
+     * returns node offset
+     * @return node offset
+     */
+    public long getOffset(){
+        return this.fileOffset;
     }
 
+
+
+    /**
+     * Prints all the keys
+     */
+    public void printKeys(){
+        int i = 0;
+        for(i = 0; i < keys.length; i++ ){
+            System.out.print(keys[i]+" ");
+        }
+    }
 }
