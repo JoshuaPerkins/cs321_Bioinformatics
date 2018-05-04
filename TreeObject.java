@@ -8,6 +8,7 @@
  * Class: CS 321 - Data Structures
  * Spring 2018 - Steven Cutchin
  */
+
 public class TreeObject {
 
     long key;

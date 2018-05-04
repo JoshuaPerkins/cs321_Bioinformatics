@@ -9,7 +9,6 @@
  */
 import java.io.*;
 
-
 public class BTree{
     // Class Variables
     long degree;    // degree of the B-tree
@@ -18,7 +17,6 @@ public class BTree{
     RandomAccessFile bTreeFile; // binary file the B-tree is saved in
 
     Cache bTreeCache = new Cache(500); // initial cache size: df
-
     /**
      * Constructor method for a B-tree
      * @param degree: degree of the B-tree
@@ -46,6 +44,7 @@ public class BTree{
         bTreeCache.addObject(result); // adding BTN to cache :df
         return result;
     }
+
 
     /**
      * Method that inserts a key into a B-tree

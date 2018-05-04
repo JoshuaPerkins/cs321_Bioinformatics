@@ -7,6 +7,7 @@
 
 OVERVIEW:
  
+
  A program that parses DNA sequences from GeneBank files (.gbk) and stores the
  data into a BTree. The BTree will be stored on disk and is created to user input
  specifications. Once the BTree is created query files are able to be used to 

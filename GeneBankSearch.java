@@ -1,6 +1,7 @@
 import java.io.*;
 import java.util.ArrayList;
 
+
 /**
  * GeneBankSearch class for searching a BTree for subsequences from a query file.
  *

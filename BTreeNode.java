@@ -10,7 +10,6 @@
  */
 import java.io.*;
 
-
 public class BTreeNode {
     // class variables
     long fileOffset;
