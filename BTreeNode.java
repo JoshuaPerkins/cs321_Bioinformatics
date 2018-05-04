@@ -17,7 +17,7 @@ public class BTreeNode {
     int degree;
     long parent; // parent pointer
     long children[]; // array of children
-    Object treeObject[]; // tree object array
+    TreeObject treeObject[]; // tree object array
     long numKeys; // key count
     long numChildren; // children count
     boolean isLeaf; // leaf checker
@@ -31,6 +31,15 @@ public class BTreeNode {
         this.degree = degree;
         this.treeObject = new TreeObject[2 * degree - 1]; // treeObject holds the keys and frequency
         this.children = new long[2 * degree]; // max number of children
+    }
+
+    /**
+     * Retrieve tree object from a certain index.
+     * @param index
+     * @return
+     */
+    public TreeObject getTreeObject(int index){
+        return treeObject[index];
     }
 
     /**
