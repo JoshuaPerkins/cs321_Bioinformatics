@@ -9,12 +9,15 @@
  */
 import java.io.*;
 
+
 public class BTree{
     // Class Variables
     long degree;    // degree of the B-tree
     long nodeSize;  // size of each node in the B-tree
     BTreeNode root; // root node of the B-tree
     RandomAccessFile bTreeFile; // binary file the B-tree is saved in
+
+    Cache bTreeCache = new Cache(500); // initial cache size: df
 
     /**
      * Constructor method for a B-tree
@@ -24,6 +27,7 @@ public class BTree{
     public BTree(int degree, String fileName) throws IOException{
         bTreeFile = new RandomAccessFile(fileName, "rw");
         root = createBTN(degree, bTreeFile);
+        bTreeCache.addObject(root); // adding root to cache: df
     }
 
     /**
@@ -33,9 +37,13 @@ public class BTree{
      */
     public BTreeNode createBTN(int degree, RandomAccessFile myFile) throws IOException{
         BTreeNode result = new BTreeNode(degree);
+        result.numChildren = 0; //df
+        result.numKeys = 0; //df
+        result.isLeaf = true; //df
         long fileOffset = myFile.length();
         result.setFileOffset(fileOffset, myFile);
         result.writeNode(myFile);
+        bTreeCache.addObject(result); // adding BTN to cache :df
         return result;
     }
 

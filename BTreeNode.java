@@ -10,15 +10,17 @@
  */
 import java.io.*;
 
+
 public class BTreeNode {
     // class variables
     long fileOffset;
     int degree;
-    long children[];
-    long keys[];
+    long children[]; // array of children
+    long keys[]; // array of keys
     long freqency[];
-    long numKeys;
-    boolean isLeaf;
+    long numKeys; // key count
+    long numChildren; // children count
+    boolean isLeaf; // leaf checker
 
     /**
      * Constructor method for a BTreeNode
@@ -30,26 +32,37 @@ public class BTreeNode {
         else{
             this.degree = 170; // default degree
         }
-        this.children = new long[2 * degree];
-        this.keys = new long[2 * degree - 1];
-        this.freqency = new long[2 * degree - 1];
+        this.children = new long[2 * degree]; // max number of children
+        this.keys = new long[2 * degree - 1]; // max number of keys
+        this.freqency = new long[2 * degree - 1]; // array to hold frequency
     }
 
     /**
      * Checking node for children
-     * @param
-     * @param index
-     * @return
+     * @return true/false
      */
-    public boolean isLeaf(int index){
-        if(this.children[index] == 0){
-            return true;
+    public boolean isLeaf(){
+        if(this.children.length == 0){
+            this.isLeaf = true;
+            return this.isLeaf;
         }
         else{
             return false;
         }
     }
 
+    /**
+     * Checking for max keys
+     * @return true/false
+     */
+    public boolean isFull(){
+        if(numKeys == this.keys.length){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 
     /**
      * Method for writing a node to a binary file
@@ -86,9 +99,9 @@ public class BTreeNode {
         this.fileOffset = fileOffset;
         myFile.seek(fileOffset);
     }
-    
 
-    public long getFrequency(){
-        return this.freqency[1];
+    public long getFreqency(int i){
+        return freqency[i];
     }
+
 }
