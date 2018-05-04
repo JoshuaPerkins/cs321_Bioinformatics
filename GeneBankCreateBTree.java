@@ -12,12 +12,13 @@ import java.io.*;
  */
 
 public class GeneBankCreateBTree {
+
     /**
      * Main method to create a BTree and parse sequences of DNA & insert the subsequences into the BTree.
      *
      * @param args The user arguments for the program.
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         // Variables to define min/max arguments expected
         final int MIN_ARGS_IN = 5;
         final int MAX_ARGS_IN = 6;
@@ -96,7 +97,7 @@ public class GeneBankCreateBTree {
         try {
             // Set up cache size from user input
             cacheSize = Integer.parseInt(args[4]);
-            if (cacheSize < 1) {
+            if ((cacheSize < 1) && (useCache)) {
                 System.out.println("ERROR: Check correct usage for <cache size>.\n");
                 printGeneBankCreateBTreeUse();
             }
@@ -138,7 +139,9 @@ public class GeneBankCreateBTree {
         String btree_file = (gbk_file + ".btree.data." + subsequenceLength + "." + treeDegree);
 
         // Creates BTree
-        BTree myBTree = new BTree(treeDegree, btree_file, useCache, cacheSize);
+        BTree myBTree = new BTree(treeDegree, btree_file);
+//            myBTree = new BTree(treeDegree, btree_file, useCache, cacheSize);
+
 
         // Parses gbk file and adds subsequences to BTree
         ParseFile.parseGbk(gbk_file, subsequenceLength, myBTree);
@@ -152,7 +155,7 @@ public class GeneBankCreateBTree {
                 dumpFile.createNewFile();   // create handle return?
                 PrintWriter writer = new PrintWriter(dumpFile);
                 // Traverses the BTree writing the frequency and subsequence information to the debug file
-                BTreeTraversal.inorderDebugPrinter(myBTree.getRoot(), writer);
+//                BTreeTraversal.inorderDebugPrinter(myBTree.root, subsequenceLength, writer);
                 // Closes the writer
                 writer.close();
             }

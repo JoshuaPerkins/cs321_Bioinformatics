@@ -15,7 +15,7 @@ public class BTree {
     // Class Variables
     int degree;    // degree of the B-tree
     long fileOffset;
-    long nextSpot;
+    int nextSpot;
     long nodeSize = 4096;  // size of each node in the B-tree
     BTreeNode root; // root node of the B-tree
     RandomAccessFile bTreeFile; // binary file the B-tree is saved in
@@ -40,64 +40,85 @@ public class BTree {
      */
     public BTreeNode createBTN(int degree) throws IOException {
         BTreeNode result = new BTreeNode(degree);
-        long fileOffset = bTreeFile.length();
-        result.setFileOffset(fileOffset, bTreeFile);
-        result.writeNode(bTreeFile);
+        result.fileOffset = (int)bTreeFile.length();
+        writeNode(true, result);
         return result;
     }
 
-    public BTreeNode findLeaf() {
-
-    }
-
     /**
-     * Method that inserts a key into a B-tree
-     *
+     * Method that inserts a key into a non-full BTreeNode
      * @param key: key to be inserted
+     * @param node: node that key is to be inserted in
      */
     public void insertNonFull(long key, BTreeNode node) throws IOException {
         int i = 0;
         int j = 0;
-        // if the node has space
-        boolean greaterThan = true;
-        // find key greater than key to be inserted
-        while (i < node.numKeys && greaterThan) {
-            greaterThan = key > node.keys[i].getKey();
-            if (greaterThan) i++;
+        // if the node is a leaf
+        if(node.isLeaf){
+            boolean greaterThan = true;
+            // find key greater than key to be inserted
+            while (i < node.numKeys && greaterThan) {
+                greaterThan = key > node.keys[i].getKey();
+                if (greaterThan) i++;
+            }
+            if (key == node.keys[i].getKey()) {
+                node.keys[i].freqIncrement();
+                return;
+            }
+            for (j = node.numKeys; j > i; j--) {
+                node.keys[j] = node.keys[j - 1];
+            }
+            node.keys[i] = new TreeObject(key);
+            node.numKeys++;
+            writeNode(false, node);
         }
-        if (key == node.keys[i].getKey()) {
-            node.keys[i].freqIncrement();
-            return;
+        else {
+            i = node.numKeys;
+            while(i > 1 && key < node.keys[i].getKey()){
+                i--;
+            }
+            BTreeNode child = readNode(node.children[i]);
+            if(child.numKeys == 2*degree-1){
+                splitChild(node, child, i);
+                if(key > node.keys[i].getKey()){
+                    i++;
+                }
+            }
+            insertNonFull(key, child);
         }
-        for (j = node.numKeys; j > i; j--) {
-            node.keys[j] = node.keys[j - 1];
-        }
-        node.keys[i].setKey(key);
-        node.numKeys++;
     }
 
-    public void insert(long pointer, long key) throws IOException{
+    /**
+     * Method that inserts a key into a B-Tree
+     * @param pointer
+     * @param key
+     * @throws IOException
+     */
+    public void insert(int pointer, long key) throws IOException{
+        int i = 0;
         BTreeNode node = readNode(pointer);
-        // node is full
-         if (node.numKeys < 2 * degree - 1) {
-
-         }
-        boolean greaterThan = true;
-        // find key greater than key to be inserted
-        while(i < node.numKeys && greaterThan){
-            greaterThan = key > node.keys[i].getKey();
-            if(greaterThan) i++;
-        }
-        if(key == node.keys[i].getKey()){
-            node.keys[i].freqIncrement();
+        // if node has room
+        if (node.numKeys < 2 * degree - 1) {
+            insertNonFull(key, node);
             return;
         }
-        int middleIndex = degree-1;
-        if(i > middleIndex){
-            middleIndex++;
+        // if the node is full
+        BTreeNode newParent = new BTreeNode(degree);
+        if(node.parent != 0) {
+            BTreeNode oldParent = readNode(node.parent);
+            // find the child's pointer in the old parent's children array
+            while (pointer != oldParent.children[i]) {
+                i++;
+            }
+            oldParent.children[i] = nextSpot;
         }
-        split(node, middleIndex, key);
-        node.numKeys++;
+        newParent.children[0] = pointer;
+        newParent.isLeaf = false;
+        newParent.numChildren = 0;
+        newParent.numKeys = 1;
+        writeNode(true, newParent);
+        splitChild(newParent, node, 0);
+        insertNonFull(key, newParent);
     }
 
     /**
@@ -113,24 +134,38 @@ public class BTree {
     /**
      * Method that splits a B-tree node in half and pushes middle to parent
      */
-    public void split(BTreeNode node, int middleIndex, long insertKey) throws IOException{
-        // move middleIndex key to parent
-        long parentPointer = node.parent;
-        // if we are splitting a non-root node
-        if(parentPointer != 0) {
-            setFileOffset(parentPointer);
-            BTreeNode parent = readNode(parentPointer);
-            insert(insertKey, parent);
-            BTreeNode child = new BTreeNode(degree);
-            int i = 0;
-            int j = 0;
-            for(i = middleIndex; i < node.keys.length-1; i++){
-                child.keys[j] = node.keys[i];
-                j++;
-            }
-
+    public void splitChild(BTreeNode parent, BTreeNode fullChild, int childIndex) throws IOException{
+        BTreeNode newChild = new BTreeNode(degree);
+        newChild.isLeaf = fullChild.isLeaf;
+        // splitting the keys between the two children
+        for(int i = 0; i < degree - 1; i++){
+            newChild.keys[i].setKey(fullChild.keys[i+degree].getKey());
+            newChild.numKeys++;
+            fullChild.numKeys--;
         }
-        // call insert(insertKey)
+        // splitting the children pointers between the two children
+        if(!fullChild.isLeaf){
+            for(int j = 0; j < degree-1; j++){
+                newChild.children[j] = fullChild.children[j+degree];
+                newChild.numChildren++;
+                fullChild.numChildren--;
+            }
+        }
+        // shifting children pointers in the parent node
+        for(int k = (int)parent.numChildren; k > childIndex; k--){
+            parent.children[k] = parent.children[k-1];
+        }
+        // inserting newChild's pointer into parent's children array
+        parent.children[childIndex] = nextSpot;
+        // shifting keys in the parent node
+        for(int n = (int)parent.numKeys; n > childIndex - 1; n--){
+            parent.keys[n].setKey(parent.keys[n-1].getKey());
+        }
+        parent.keys[childIndex].setKey(fullChild.keys[degree].getKey());
+        parent.numKeys++;
+        writeNode(false, parent);
+        writeNode(false, fullChild);
+        writeNode(true, newChild);
     }
 
     /**
@@ -146,51 +181,78 @@ public class BTree {
      * Method for writing a node to a binary file
      * @param node: node to be written to RAF
      */
-    public void writeNode(BTreeNode node) throws IOException{
-        bTreeFile.seek(fileOffset);
-        bTreeFile.writeLong(fileOffset);
-//        int i;
-//        for(i=0; i < this.children.length; i++){
-//            bTreeFile.writeLong(children[i]);
-//        }
+    public void writeNode(boolean isNew, BTreeNode node) throws IOException{
+        int location;
+        if(isNew){
+            location = nextSpot;
+            nextSpot += 4096;
+        }
+        else {
+            location = node.fileOffset;
+        }
+        bTreeFile.seek(location);
+        bTreeFile.writeInt(node.parent);
+        bTreeFile.writeInt(node.numChildren);
+        bTreeFile.writeInt(node.numKeys);
+        bTreeFile.writeInt(node.fileOffset);
+        bTreeFile.writeBoolean(node.isLeaf);
+        bTreeFile.seek(location+24);
+        for(int i=0; i < node.numKeys; i++){
+            bTreeFile.writeLong(node.keys[i].getKey());
+            bTreeFile.writeInt(node.keys[i].getFreq());
+        }
+        bTreeFile.seek(location+3064);
+        for(int j=0; j < node.numChildren; j++){
+            bTreeFile.writeInt(node.children[j]);
+        }
     }
 
     /**
      * Method for reading a node from a binary file
      * @param pointer: pointer to node to be read from RAF
      */
-    public BTreeNode readNode(long pointer) throws IOException{
-        bTreeFile.seek(fileOffset);
-        long afo = bTreeFile.readLong();
-        int i;
-//        for(i=0; i < this.children.length; i++){
-//            this.children[i] = bTreeFile.readLong();
-//        }
-//        return afo;
+    public BTreeNode readNode(int pointer) throws IOException{
+        BTreeNode node = new BTreeNode(degree);
+        bTreeFile.seek(pointer);
+        node.parent = bTreeFile.readInt();
+        node.numChildren = bTreeFile.readInt();
+        node.numKeys = bTreeFile.readInt();
+        node.fileOffset = bTreeFile.readInt();
+        node.isLeaf = bTreeFile.readBoolean();
+        bTreeFile.seek(pointer+24);
+        for(int i=0; i < node.numKeys; i++){
+            node.keys[i] = new TreeObject(bTreeFile.readLong());
+            node.keys[i].setFreq(bTreeFile.readInt());
+        }
+        bTreeFile.seek(pointer+3064);
+        for(int j=0; j < node.numChildren; j++){
+            node.children[j] = bTreeFile.readInt();
+        }
+        return node;
     }
 
     private class BTreeNode {
         // class variables
-        long fileOffset;
+        int fileOffset;
         int degree;
-        long parent; // parent pointer
-        long children[]; // array of children
+        int parent; // parent pointer
+        int children[]; // array of children
         TreeObject keys[]; // array of keys and frequencies
         int numKeys; // key count
-        long numChildren; // children count
+        int numChildren; // children count
         boolean isLeaf; // leaf checker
 
         /**
          * Constructor method for a BTreeNode
          */
         public BTreeNode(int degree){
-            if(degree > 0 && degree <= 128) {
+            if(degree > 0 && degree <= 127) {
                 this.degree = degree;
             }
             else {
-                this.degree = 128; // default degree
+                this.degree = 127; // default degree
             }
-            this.children = new long[2 * degree]; // max number of children
+            this.children = new int[2 * degree]; // max number of children
             this.keys = new TreeObject[2 * degree - 1]; // max number of keys
         }
 
@@ -199,12 +261,7 @@ public class BTree {
          * @return true/false
          */
         public boolean isLeaf(){
-            if(this.isLeaf){
-                return true;
-            }
-            else{
-                return false;
-            }
+            return isLeaf;
         }
 
         /**
@@ -218,6 +275,41 @@ public class BTree {
             else{
                 return false;
             }
+        }
+    }
+
+    private class TreeObject {
+
+        private long key;
+        private int freq;
+
+        // Sets initial values for key, and frequency
+        public TreeObject( long key){
+            this.key = key;
+            this.freq = 1;
+        }
+
+        // Sets key
+        public void setKey(long key){
+            this.key = key;
+        }
+
+        // Returns key
+        public long getKey(){
+            return this.key;
+        }
+
+        // Increments frequency
+        public void freqIncrement(){ this.freq++; }
+
+        // Sets frequency
+        public void setFreq(int freq){
+            this.freq = freq;
+        }
+
+        // Returns current frequency
+        public int getFreq(){
+            return this.freq;
         }
     }
 }
