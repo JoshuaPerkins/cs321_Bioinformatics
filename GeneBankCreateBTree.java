@@ -22,7 +22,7 @@ public class GeneBankCreateBTree {
         final int MIN_ARGS_IN = 5;
         final int MAX_ARGS_IN = 6;
         // Optimum degree based upon disk block size of 4096
-        final int OPTIMUM_DEGREE = 170;
+        final int OPTIMUM_DEGREE = 128;
         // Debug file name
         final String DEBUG_FILE_OUT = "dump";
         // Maximum subsequence length
@@ -138,35 +138,21 @@ public class GeneBankCreateBTree {
         String btree_file = (gbk_file + ".btree.data." + subsequenceLength + "." + treeDegree);
 
         // Creates BTree
-//        BTree myBTree = new BTree(treeDegree, btree_file, useCache, cacheSize);
+        BTree myBTree = new BTree(treeDegree, btree_file, useCache, cacheSize);
 
         // Parses gbk file and adds subsequences to BTree
-//        ParseFile.parseGbk(gbk_file, subsequenceLength, myBTree);
+        ParseFile.parseGbk(gbk_file, subsequenceLength, myBTree);
 
         // Checks debug level and prints to file accordingly
         try {
             if (debugLevel == 1) {
-                  // my solution template
-//                // Saves the stdout to be reset afterwards
-//                PrintStream stdout = System.out;
-//                // Creates the output stream and sets the standard output to it
-//                PrintStream debugOut = new PrintStream(new FileOutputStream(DEBUG_FILE_OUT));
-//                System.setOut(debugOut);
-//                // Prints inorder traversal of BTree
-//                myBTree.inorderPrint();
-//                // Closes the output file
-//                debugOut.close();
-//                // Resets output to stdout
-//                System.setOut(stdout);
-
-                // Other solution
                 // Creates a new dump file for debug information
                 File dumpFile = new File(DEBUG_FILE_OUT);
                 dumpFile.delete();          // delete handle return?
                 dumpFile.createNewFile();   // create handle return?
                 PrintWriter writer = new PrintWriter(dumpFile);
                 // Traverses the BTree writing the frequency and subsequence information to the debug file
-//                myBTree.inorderPrint(myBTree.getRoot(), writer, sequenceLength);
+                BTreeTraversal.inorderDebugPrinter(myBTree.getRoot(), writer);
                 // Closes the writer
                 writer.close();
             }
