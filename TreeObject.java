@@ -12,7 +12,7 @@
 public class TreeObject {
 
     private long key;
-    private long freq;
+    private int freq;
 
     // Sets initial values for key, and frequency
     public TreeObject( long key){
