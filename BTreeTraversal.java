@@ -20,7 +20,7 @@ public class BTreeTraversal {
      * @param writer The PrintWriter
      * @throws IOException
      */
-    public static void inorderDebugPrinter(BTreeNode node, int k, PrintWriter writer) throws IOException {
+    public static void inorderDebugPrinter(BTree.BTreeNode node, int k, PrintWriter writer) throws IOException {
         if (node != null) {
             for (int i = 0; i < node.numChildren; i++) {
                 // Temporarily store the child node
