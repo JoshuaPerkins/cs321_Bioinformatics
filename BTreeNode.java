@@ -1,83 +1,151 @@
+
+/**
+ * BTreeNode class for ...
+ *
+ * @author JPerkins
+ * Date: April 13, 2018
+ *
+ * Class: CS 321 - Data Structures
+ * Spring 2018 - Steven Cutchin
+ */
 import java.io.*;
 
 public class BTreeNode {
+
+    // class variables
+    long fileOffset;
+    int degree;
+    long parent; // parent pointer
+    long children[]; // array of children
+    Object treeObject[]; // tree object array
+    long numKeys; // key count
+    long numChildren; // children count
+    boolean isLeaf; // leaf checker
+
     /**
-     * BTreeNode class for ...
-     *
-     * @author JPerkins, DFlores
-     * Date: April 13, 2018
-     *
-     * Class: CS 321 - Data Structures
-     * Spring 2018 - Steven Cutchin
+     * Constructor for BTreeNode
+     * key, and frequency are contained in TreeObject
+     * @param degree
      */
-
-
-    private int keyArraySize;
-    private int childrenArraySize;
-    private int freqArraySize;
-
-    private long offset = 0;
-    private long children[] = new long[childrenArraySize];
-    long keys[] = new long[keyArraySize];
-    long freq[] = new long[freqArraySize];
-    long numKeys; // may not use could calucalte the number of keys based on when I find a -1
-    boolean isLeaf; // may not use
-    long degree; // may not use
-    private long afo;
-
-    BTreeNode(long degree) {
-        keyArraySize = (int) (2*degree-1);
-        freqArraySize = (int) (2*degree-1);
-        childrenArraySize = (int) (2*degree);
-
+    public BTreeNode(int degree){
+        this.degree = degree;
+        this.treeObject = new TreeObject[2 * degree - 1]; // treeObject holds the keys and frequency
+        this.children = new long[2 * degree]; // max number of children
     }
 
-    public long readNode(RandomAccessFile myFile){
-        long ret = 0;
-        try {
-            myFile.seek(offset);
-        } catch (IOException e1) {
-            //e1.printStackTrace();
-            System.out.println("READ ERROR: Seek not working.");
+    /**
+     * Checking node for children
+     * @return true/false
+     */
+    public boolean isLeaf(){
+        if(this.isLeaf){
+            return true;
         }
-        try {
-            afo = myFile.readLong();
-        } catch (IOException e1) {
-            //e1.printStackTrace();
-            System.out.println("READ ERROR: Unable to read file.");
+        else{
+            return false;
         }
-        int i;
-        for(i = 0; i < children.length; i++ ){
-            try {
-                children[i] = myFile.readLong();
-            } catch (IOException e) {
-                //e.printStackTrace();
-                System.out.println("READ ERROR: Could not read child [" + i + "]");
-            }
-        }
-        return ret;
     }
-    public void writeNode(RandomAccessFile myFile){
-        try {
-            myFile.seek(offset);
-        } catch (IOException e1) {
-            //e1.printStackTrace();
-            System.out.println("WRITE ERROR: Seek not working.");
+
+    /**
+     * Checking for max keys
+     * @return true/false
+     */
+    public boolean isFull(){
+        if(numKeys == this.treeObject.length){
+            return true;
         }
-        try {
-            myFile.writeLong(offset);
-        } catch (IOException e1) {
-            //e1.printStackTrace();
-            System.out.println("WRITE ERROR: Unable to reach offset.");
+        else{
+            return false;
         }
+    }
+
+    /**
+     *
+     * @return returns parents
+     */
+    public long getParent(){
+        return this.parent;
+    }
+
+    /**
+     * Setting the file offset to fileOS
+     * @param fileOS
+     */
+    public void setFileOffset(int fileOS){
+        this.fileOffset = fileOS;
+    }
+
+    /**
+     * Method for writing a node to a binary file
+     * @param myFile: file to be written to
+     */
+    public void writeNode(RandomAccessFile myFile) throws IOException{
+        myFile.seek(fileOffset);
+        myFile.writeLong(fileOffset);
         int i;
-        for(i = 0; i < children.length; i++){
-            try {
-                myFile.writeLong(children[i]);
-            } catch (IOException e) {
-                //e.printStackTrace();
-                System.out.println("WRITE ERROR: Could not write to child [" + i + "]");
+        for(i=0; i < this.children.length; i++){
+            myFile.writeLong(children[i]);
+        }
+    }
+
+    /**
+     * Method for reading a node from a binary file
+     * @param myFile: file to be read from
+     */
+    public BTreeNode readNode(RandomAccessFile myFile) throws IOException{
+        BTreeNode newNode = null;
+        // checking things and stuff
+
+        // checking cache for node before anything else.
+        if(bTreeCache != null){
+            newNode = readNode(offset);
+            if(newNode != null){
+                return newNode;
             }
+        }
+
+        newNode = new BTreeNode(this.degree); //default degree, change.
+        TreeObject obj = null;
+
+
+
+        int i = 0;
+        return newNode;
+        //myFile.seek(fileOffset);
+        //long afo = myFile.readLong();
+        //int i;
+        //for(i=0; i < this.children.length; i++){
+         //   this.children[i] = myFile.readLong();
+        //}
+        //return afo;
+    }
+
+    /**
+     * Method for setting the file offset in a B-Tree node
+     * @param fileOffset: desired file offset
+     */
+    public void setFileOffset(long fileOffset, RandomAccessFile myFile) throws IOException{
+        this.fileOffset = fileOffset;
+        myFile.seek(fileOffset);
+    }
+
+    /**
+     * returns node offset
+     * @return node offset
+     */
+    public long getOffset(){
+        return this.fileOffset;
+    }
+
+
+
+    /**
+     * Prints all the keys
+     */
+    public void printKeys(){
+        int i = 0;
+        for(i = 0; i < keys.length; i++ ){
+            System.out.print(keys[i]+" ");
         }
     }
 }
