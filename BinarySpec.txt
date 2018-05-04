@@ -1,5 +1,6 @@
 *Btree = giant array
-*First 4096 bytes used for BTree metadata
+*First 4096 bytes used for BTree metadata'
+*Offset zero in the file will be the pointer to root
 *All data will be 64 bit longs
 *Max sub sequence size = 31 characters
 *No matter the sub sequence size, write 64 bits to array
@@ -11,14 +12,13 @@
 	- 9 bytes total, 24 bytes word aligned
 *Key size = 64 bits = 8 bytes
 *meta-data of single node + size of pointer (to parent) + size of key*(2t - 1) + size of pointer (to children) * 2t = 4096
-	- 12 + 8(2t-1) + 4*2t = 4096
-	- 24t + 4 = 4096
-	- 24t = 4092
-	- t = 170
+	- 12 + 12(2t-1) + 4*2t = 4096
+	- 32t = 4096
+	- t = 128
 *Node Structure
 	1. Metadata (24 Bytes, offset = 0)
-	2. 339 Keys (2712 Bytes, offset = 24)
-	3. 340 Children Pointers (1360 Bytes, offset = 2736)
+	2. 255 Keys(Tree Objects) (3060 Bytes, offset = 24)
+	3. 256 Children Pointers (1024 Bytes, offset = 3084)
 
 
 A = 00
