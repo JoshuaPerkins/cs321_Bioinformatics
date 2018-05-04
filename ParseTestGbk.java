@@ -11,6 +11,7 @@ import java.io.*;
  */
 public class ParseTestGbk {
 
+
     /**
      * Tests the parsing of substrings from gbk files.
      * Usage <subseq length> <gbk filename>

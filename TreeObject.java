@@ -8,12 +8,13 @@
  * Class: CS 321 - Data Structures
  * Spring 2018 - Steven Cutchin
  */
+
 public class TreeObject {
 
     long key;
     int freq;
 
-    // Sets initial key, freq values.
+    // Sets initial values for key, and frequency
     public TreeObject( long key, int freq){
         this.key = key;
         this.freq = freq;
@@ -30,12 +31,10 @@ public class TreeObject {
     }
 
     // Increments frequency
-    public void freqIncrement(){
-        this.freq++;
-    }
+    public void freqIncrement(){ this.freq++; }
 
     // Returns current frequency
-    public int getFreq() {
+    public int getFreq(){
         return this.freq;
     }
 }

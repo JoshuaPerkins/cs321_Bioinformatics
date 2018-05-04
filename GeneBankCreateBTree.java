@@ -1,5 +1,6 @@
 import java.io.*;
 
+
 /**
  * GeneBankCreateBTree class for creating a BTree from parsed DNA sequences found in gbk files.
  *
@@ -9,6 +10,7 @@ import java.io.*;
  * Class: CS 321 - Data Structures
  * Spring 2018 - Steven Cutchin
  */
+
 public class GeneBankCreateBTree {
     /**
      * Main method to create a BTree and parse sequences of DNA & insert the subsequences into the BTree.
@@ -119,7 +121,7 @@ public class GeneBankCreateBTree {
                         printGeneBankCreateBTreeUse();
                 }
             } catch (NumberFormatException e) {
-                System.out.println("ERROR: Incorrect input for <cache size> : " + e.getMessage() + "\n\n");
+                System.out.println("ERROR: Incorrect input for [<debug level>] : " + e.getMessage() + "\n\n");
                 printGeneBankCreateBTreeUse();
             }
         }

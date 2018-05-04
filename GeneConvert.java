@@ -7,6 +7,7 @@
  * Class: CS 321 - Data Structures
  * Spring 2018 - Steven Cutchin
  */
+
 class GeneConvert {
 
     // Variables defining the characters used in DNA parsing; set to bit format
