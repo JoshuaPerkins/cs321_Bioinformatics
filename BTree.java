@@ -15,7 +15,7 @@ public class BTree {
     // Class Variables
     int degree;    // degree of the B-tree
     long fileOffset;
-    int nextSpot;
+    int nextSpot = 4096;
     long nodeSize = 4096;  // size of each node in the B-tree
     BTreeNode root; // root node of the B-tree
     RandomAccessFile bTreeFile; // binary file the B-tree is saved in
@@ -26,10 +26,16 @@ public class BTree {
      * @param degree:   degree of the B-tree
      * @param fileName: name of the file where the B-tree is to be stored
      */
-    public BTree(int degree, String fileName) throws IOException {
+    public BTree(int degree, String fileName, boolean useCache, int cacheSize) throws IOException {
         bTreeFile = new RandomAccessFile(fileName, "rw");
+        bTreeFile.setLength(8192);
+        bTreeFile.writeLong(1111111);
         root = createBTN(degree);
         this.degree = degree;
+    }
+
+    public BTreeNode getRoot() {
+        return root;
     }
 
     /**
@@ -40,7 +46,11 @@ public class BTree {
      */
     public BTreeNode createBTN(int degree) throws IOException {
         BTreeNode result = new BTreeNode(degree);
-        result.fileOffset = (int)bTreeFile.length();
+        result.fileOffset = 4096;
+        result.isLeaf = true;
+        result.keys[0] = new TreeObject(0);
+        result.keys[0].setFreq(0);
+        result.numKeys = 1;
         writeNode(true, result);
         return result;
     }
@@ -61,8 +71,15 @@ public class BTree {
                 greaterThan = key > node.keys[i].getKey();
                 if (greaterThan) i++;
             }
+            if(i == node.numKeys){
+                node.keys[i] = new TreeObject(key);
+                node.numKeys++;
+                writeNode(false, node);
+                return;
+            }
             if (key == node.keys[i].getKey()) {
                 node.keys[i].freqIncrement();
+                writeNode(false, node);
                 return;
             }
             for (j = node.numKeys; j > i; j--) {
@@ -73,8 +90,8 @@ public class BTree {
             writeNode(false, node);
         }
         else {
-            i = node.numKeys;
-            while(i > 1 && key < node.keys[i].getKey()){
+            i = node.numKeys - 1;
+            while(i > 0 && key < node.keys[i].getKey()){
                 i--;
             }
             BTreeNode child = readNode(node.children[i]);
@@ -115,7 +132,7 @@ public class BTree {
         newParent.children[0] = pointer;
         newParent.isLeaf = false;
         newParent.numChildren = 0;
-        newParent.numKeys = 1;
+        newParent.numKeys = 0;
         writeNode(true, newParent);
         splitChild(newParent, node, 0);
         insertNonFull(key, newParent);
@@ -139,7 +156,7 @@ public class BTree {
         newChild.isLeaf = fullChild.isLeaf;
         // splitting the keys between the two children
         for(int i = 0; i < degree - 1; i++){
-            newChild.keys[i].setKey(fullChild.keys[i+degree].getKey());
+            newChild.keys[i] = fullChild.keys[i+degree];
             newChild.numKeys++;
             fullChild.numKeys--;
         }
@@ -158,10 +175,10 @@ public class BTree {
         // inserting newChild's pointer into parent's children array
         parent.children[childIndex] = nextSpot;
         // shifting keys in the parent node
-        for(int n = (int)parent.numKeys; n > childIndex - 1; n--){
+        for(int n = parent.numKeys; n > childIndex; n--){
             parent.keys[n].setKey(parent.keys[n-1].getKey());
         }
-        parent.keys[childIndex].setKey(fullChild.keys[degree].getKey());
+        parent.keys[childIndex] = fullChild.keys[degree];
         parent.numKeys++;
         writeNode(false, parent);
         writeNode(false, fullChild);
@@ -186,6 +203,9 @@ public class BTree {
         if(isNew){
             location = nextSpot;
             nextSpot += 4096;
+            if(bTreeFile.length() < location + 4096){
+                bTreeFile.setLength(location + 4096);
+            }
         }
         else {
             location = node.fileOffset;
@@ -231,7 +251,7 @@ public class BTree {
         return node;
     }
 
-    private class BTreeNode {
+    class BTreeNode {
         // class variables
         int fileOffset;
         int degree;
@@ -278,7 +298,7 @@ public class BTree {
         }
     }
 
-    private class TreeObject {
+    public class TreeObject {
 
         private long key;
         private int freq;
