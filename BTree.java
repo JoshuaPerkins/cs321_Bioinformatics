@@ -51,6 +51,7 @@ public class BTree {
         result.keys[0] = new TreeObject(0);
         result.keys[0].setFreq(0);
         result.numKeys = 1;
+        result.numChildren = 0;
         writeNode(true, result);
         return result;
     }
@@ -157,10 +158,7 @@ public class BTree {
            greaterThan = key > node.keys[i].getKey();
            i++;
        }
-       if(!found){
-           if(i == node.numKeys) {
-               i++;
-           }
+       if(!found && !node.isLeaf()){
            frequency = search(key,node.children[i]);
        }
        return frequency;
@@ -187,11 +185,12 @@ public class BTree {
             }
         }
         // shifting children pointers in the parent node
-        for(int k = (int)parent.numChildren; k > childIndex; k--){
+        for(int k = parent.numChildren; k > childIndex; k--){
             parent.children[k] = parent.children[k-1];
         }
         // inserting newChild's pointer into parent's children array
         parent.children[childIndex] = nextSpot;
+        parent.numChildren++;
         // shifting keys in the parent node
         for(int n = parent.numKeys; n > childIndex; n--){
             parent.keys[n].setKey(parent.keys[n-1].getKey());
