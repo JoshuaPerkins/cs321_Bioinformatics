@@ -16,13 +16,13 @@ INCLUDED FILES:
  
  * Created project files:
    + BTree.java - Project implementation of BTree data structure
-   + BTreeNode.java - Node class for BTree
+   + BTreeNode class - Node class for BTree
    + Cache.java - Cache class for BTree
    + GeneBankCreateBTree.java - Main class for creating BTree from .gbk file
    + GeneBankSearch.java - Main class for finding query sequences in a BTree
    + GeneConvert.java - Conversion class to convert between Strings and longs
    + ParseFile.java - Parser class to parse Strings from input files
-   + TreeObject.java - Object class for BTree
+   + TreeObject class - Object class for BTree
    + README - this file
    
  * Unit test project files:
