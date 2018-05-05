@@ -17,7 +17,7 @@ public class GeneBankCreateBTree {
      *
      * @param args The user arguments for the program.
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         // Variables to define min/max arguments expected
         final int MIN_ARGS_IN = 5;
         final int MAX_ARGS_IN = 6;
@@ -152,7 +152,7 @@ public class GeneBankCreateBTree {
                 dumpFile.createNewFile();   // create handle return?
                 PrintWriter writer = new PrintWriter(dumpFile);
                 // Traverses the BTree writing the frequency and subsequence information to the debug file
-                BTreeTraversal.inorderDebugPrinter(myBTree.getRoot(), writer);
+                BTreeTraversal.inorderDebugPrinter(myBTree, myBTree.getRoot(), treeDegree, writer);
                 // Closes the writer
                 writer.close();
             }
