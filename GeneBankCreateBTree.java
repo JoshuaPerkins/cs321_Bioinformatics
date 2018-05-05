@@ -47,16 +47,13 @@ public class GeneBankCreateBTree {
             // Set up cache usage from user input
             if (Integer.parseInt(args[0]) == 1) {
                 useCache = true;
-            }
-            else if (Integer.parseInt(args[0]) == 0) {
+            } else if (Integer.parseInt(args[0]) == 0) {
                 useCache = false;
-            }
-            else {
+            } else {
                 System.out.println("ERROR: Check correct usage for <cache>.\n");
                 printGeneBankCreateBTreeUse();
             }
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             System.out.println("ERROR: Incorrect input for <cache> : " + e.getMessage() + "\n\n");
             printGeneBankCreateBTreeUse();
         }
@@ -68,12 +65,10 @@ public class GeneBankCreateBTree {
             if (treeDegree < 0) {
                 System.out.println("ERROR: Check correct usage for <degree>.\n");
                 printGeneBankCreateBTreeUse();
-            }
-            else if (treeDegree == 0) {
+            } else if (treeDegree == 0) {
                 treeDegree = OPTIMUM_DEGREE;
             }
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             System.out.println("ERROR: Incorrect input for <degree> : " + e.getMessage() + "\n\n");
             printGeneBankCreateBTreeUse();
         }
@@ -86,8 +81,7 @@ public class GeneBankCreateBTree {
                 System.out.println("ERROR: Check correct usage for <sequence length>.\n");
                 printGeneBankCreateBTreeUse();
             }
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             System.out.println("ERROR: Incorrect input for <sequence length> : " + e.getMessage() + "\n\n");
             printGeneBankCreateBTreeUse();
         }
@@ -161,8 +155,7 @@ public class GeneBankCreateBTree {
         // Catches exception if file not found
         catch (FileNotFoundException e) {
             System.out.println("Cannot open file : " + e.getMessage() + "\n\n");
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.out.println("ERROR: When closing Buffer/File : " + e.getMessage() + "\n\n");
             System.exit(0);
         }
