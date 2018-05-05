@@ -1,13 +1,12 @@
 /**
- * BTree class for ...
+ * BTree class for implementing a BTree that stores GeneBank data.
  *
- * @author JPerkins
+ * @author LDirkes
  * Date: April 13, 2018
  *
  * Class: CS 321 - Data Structures
  * Spring 2018 - Steven Cutchin
  */
-import javafx.scene.Parent;
 
 import java.io.*;
 
@@ -28,9 +27,10 @@ public class BTree {
      */
     public BTree(int degree, String fileName, boolean useCache, int cacheSize) throws IOException {
         bTreeFile = new RandomAccessFile(fileName, "rw");
-        bTreeFile.setLength(8192);
-        bTreeFile.writeLong(1111111);
+//        bTreeFile.setLength(8192);
+//        bTreeFile.writeLong(1111111);
         root = createBTN(degree);
+        root.parent = 0;
         this.degree = degree;
     }
 
@@ -50,7 +50,7 @@ public class BTree {
         result.isLeaf = true;
         result.keys[0] = new TreeObject(0);
         result.keys[0].setFreq(0);
-        result.numKeys = 1;
+        result.numKeys = 0;
         result.numChildren = 0;
         writeNode(true, result);
         return result;
@@ -95,6 +95,10 @@ public class BTree {
             while(i > 0 && key < node.keys[i].getKey()){
                 i--;
             }
+            // MUST CHECK FOR SAME ITEM TO INCREMENT FREQUENCY OF NON LEAF NODE ELEMENTS
+            if (i >= 0 && key == node.keys[i].getKey()) {
+                node.keys[i].freqIncrement();
+            }
             BTreeNode child = readNode(node.children[i]);
             if(child.numKeys == 2*degree-1){
                 splitChild(node, child, i);
@@ -118,12 +122,11 @@ public class BTree {
         // if node has room
         if (node.numKeys < 2 * degree - 1) {
             insertNonFull(key, node);
-            root = node;
             return;
         }
         // if the node is full
         BTreeNode newParent = new BTreeNode(degree);
-        if(node.parent != 4096) { //changed from 0
+        if(node.parent != 0) {
             BTreeNode oldParent = readNode(node.parent);
             // find the child's pointer in the old parent's children array
             while (pointer != oldParent.children[i]) {
@@ -138,6 +141,7 @@ public class BTree {
         writeNode(true, newParent);
         splitChild(newParent, node, 0);
         insertNonFull(key, newParent);
+        return;
     }
 
     /**
@@ -244,6 +248,12 @@ public class BTree {
         for(int j=0; j < node.numChildren; j++){
             bTreeFile.writeInt(node.children[j]);
         }
+        // Resets root node so that the program is able to see it
+        // When removed the root node is lost; Unsure of reasoning
+        // Cannot traverse through children for some reason
+        if (node.fileOffset == 4096) {
+            root = node;
+        }
     }
 
     /**
@@ -259,7 +269,7 @@ public class BTree {
         node.fileOffset = bTreeFile.readInt();
         node.isLeaf = bTreeFile.readBoolean();
         bTreeFile.seek(pointer+24);
-        for(int i=0; i <= node.numKeys; i++){
+        for(int i=0; i < node.numKeys; i++){
             node.keys[i] = new TreeObject(bTreeFile.readLong());
             node.keys[i].setFreq(bTreeFile.readInt());
         }
@@ -279,32 +289,19 @@ public class BTree {
      * @throws IOException
      */
     public void inorderDebugPrinter(BTreeNode node, int k, PrintWriter writer) throws IOException {
-//        if (node != null) {
-//            for (int i = 0; i < node.numChildren; i++) {
-//                // Temporarily store the child node
-//                BTreeNode temp = readNode(node.children[i]);
-//                // If node is not leaf go to child
-//                if (!node.isLeaf) {
-//                    // Recursive call to traverse
-//                    inorderDebugPrinter(temp, k, writer);
-//                }
-//                // Loops through objects until all keys and their frequencies are printed
-//                for (int j = 0; j < node.numKeys; j++) {
-//                    // Writes frequency and key to file then inserts a new line
-//                    writer.print(node.keys[i].getFreq() + " ");
-//                    writer.print(GeneConvert.longToSubsequence(node.keys[i].getKey(), k));
-//                    writer.println();
-//                }
-//            }
-//        }
         for (int i = 0; i < node.numKeys; i++){
-            System.out.print("\n Frequency " + node.keys[i].getFreq() + " ");
-            System.out.print(GeneConvert.longToSubsequence(node.keys[i].getKey(), k) + " Key ");
+            // Print statements for debugging while it checks the node information
+            System.out.println(node.numKeys);
+            System.out.print("\n" + node.keys[i].getFreq() + " ");
+            System.out.print(GeneConvert.longToSubsequence(node.keys[i].getKey(), k) + " ");
             System.out.print(node.keys[i].getKey() + "\n");
+            // Printer writer to file for node information
             writer.print(node.keys[i].getFreq()+ " ");
             writer.println(GeneConvert.longToSubsequence(node.keys[i].getKey(), k));
         }
-        if (!node.isLeaf()){
+        // Currently prints child more than once then ends if (|| root == node) is added
+        // Checks for leafs and recursively calls down to print other information
+        if ((!node.isLeaf())){
             for (int i = 0; i < node.numKeys + 1; ++i){
                 int offset = node.children[i];
                 BTreeNode x = readNode(offset);
@@ -399,3 +396,31 @@ public class BTree {
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
