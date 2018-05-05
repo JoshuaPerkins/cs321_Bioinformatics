@@ -93,6 +93,8 @@ TESTING:
      + Without resetting the root node after inserting keys or more nodes the root is lost sometimes
      + When traversing the inorder print out for debug level one is able to print the root node and
      nothing more; almost as if children are not able to be seen
+     + Frequency data is lost when trying to print the node data as it is traversed; inserting checks
+     show that the frequency is being updated though; most likely a pointer/offset issue
  * Cannot search through created BTree because it is not created correctly
    + Seems to be an offset issue again
    + Correctly parses query strings but returns none found
