@@ -6,7 +6,6 @@
 **************** 
 
 OVERVIEW:
- 
 
  A program that parses DNA sequences from GeneBank files (.gbk) and stores the
  data into a BTree. The BTree will be stored on disk and is created to user input
@@ -80,12 +79,12 @@ TESTING:
  run-times, in seconds, are as follows:
  
  * GeneBankCreateBTree:
-   + Cache Size 100: ***--__FINISH__--***
-   + Cache Size 500: ***--__FINISH__--***
+   + Cache Size 100: N/A
+   + Cache Size 500: N/A
  
   * GeneBankSearch:
-    + Cache Size 100: ***--__FINISH__--***
-    + Cache Size 500: ***--__FINISH__--***
+    + Cache Size 100: N/A
+    + Cache Size 500: N/A
   
  The currently known bugs are:
  * Incorrectly creates BTree
@@ -96,12 +95,15 @@ TESTING:
      nothing more; almost as if children are not able to be seen
  * Cannot search through created BTree because it is not created correctly
    + Seems to be an offset issue again
+   + Correctly parses query strings but returns none found
+   
+ The parsing of keys and substrings is working correctly per the Test classes that were made.
+ The cache functionality is set up to be used but was not implemented because the BTree functionality
+ did not work yet. As it stands now the project is almost fully implemented with bugs involving the BTree 
+ creation that make the rest of the support code not work.
 
 DISCUSSION:
  
  The GeneBankCreateBTree and GeneBankSearch programs were designed to be used 
  with the cache class implemented; so the program arguments shown in Section 5
  of the project write-up were used. 
- 
-  **-- * -- THIS IS A TEMPLATE THAT NEEDS REPLACING -- * --**
- 
