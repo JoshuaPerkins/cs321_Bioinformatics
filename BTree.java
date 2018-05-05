@@ -1,14 +1,14 @@
+import java.io.*;
+
 /**
  * BTree class for implementing a BTree that stores GeneBank data.
  *
  * @author LDirkes
- * Date: April 13, 2018
+ * Date: May 4, 2018
  *
  * Class: CS 321 - Data Structures
  * Spring 2018 - Steven Cutchin
  */
-
-import java.io.*;
 
 public class BTree {
     // Class Variables
@@ -27,6 +27,7 @@ public class BTree {
      */
     public BTree(int degree, String fileName, boolean useCache, int cacheSize) throws IOException {
         bTreeFile = new RandomAccessFile(fileName, "rw");
+        // Unsure of use commented for now
 //        bTreeFile.setLength(8192);
 //        bTreeFile.writeLong(1111111);
         root = createBTN(degree);
@@ -34,6 +35,11 @@ public class BTree {
         this.degree = degree;
     }
 
+    /**
+     * Returns rood node.
+     *
+     * @return root node
+     */
     public BTreeNode getRoot() {
         return root;
     }
@@ -210,6 +216,7 @@ public class BTree {
 
     /**
      * Method for setting the file offset in a B-Tree node
+     *
      * @param fileOffset: desired file offset
      */
     public void setFileOffset(long fileOffset) throws IOException{
@@ -219,6 +226,7 @@ public class BTree {
 
     /**
      * Method for writing a node to a binary file
+     *
      * @param node: node to be written to RAF
      */
     public void writeNode(boolean isNew, BTreeNode node) throws IOException{
@@ -258,6 +266,7 @@ public class BTree {
 
     /**
      * Method for reading a node from a binary file
+     *
      * @param pointer: pointer to node to be read from RAF
      */
     public BTreeNode readNode(int pointer) throws IOException{
@@ -314,6 +323,9 @@ public class BTree {
         }
     }
 
+    /**
+     * BTreeNode class that helps the BTree use/creation.
+     */
     class BTreeNode {
         // class variables
         int fileOffset;
@@ -361,6 +373,9 @@ public class BTree {
         }
     }
 
+    /**
+     * TreeObject class that stores the key/freq values in BTreeNodes.
+     */
     public class TreeObject {
 
         private long key;
