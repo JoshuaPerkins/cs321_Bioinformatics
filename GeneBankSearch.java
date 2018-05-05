@@ -118,7 +118,7 @@ public class GeneBankSearch {
             }
 
             // Creates new BTree
-            BTree myBTree = new BTree (treeDegree, btree_filename, useCache, cacheSize);
+            BTree myBTree = new BTree (treeDegree, btree_filename);
 
 
             // While items exist in query array convert them to keys and search BTree

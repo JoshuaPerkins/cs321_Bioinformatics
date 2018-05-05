@@ -41,8 +41,8 @@ public class BTree {
 
     public BTree(int degree, String fileName) throws IOException {
         bTreeFile = new RandomAccessFile(fileName, "rw");
-        root = readNode(4096);
         this.degree = degree;
+        root = readNode(4096);
     }
 
     public BTreeNode getRoot() {
