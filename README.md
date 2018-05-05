@@ -6,7 +6,6 @@
 **************** 
 
 OVERVIEW:
- 
 
  A program that parses DNA sequences from GeneBank files (.gbk) and stores the
  data into a BTree. The BTree will be stored on disk and is created to user input
@@ -17,13 +16,13 @@ INCLUDED FILES:
  
  * Created project files:
    + BTree.java - Project implementation of BTree data structure
-   + BTreeNode.java - Node class for BTree
+   + BTreeNode class - Node class for BTree
    + Cache.java - Cache class for BTree
    + GeneBankCreateBTree.java - Main class for creating BTree from .gbk file
    + GeneBankSearch.java - Main class for finding query sequences in a BTree
    + GeneConvert.java - Conversion class to convert between Strings and longs
    + ParseFile.java - Parser class to parse Strings from input files
-   + TreeObject.java - Object class for BTree
+   + TreeObject class - Object class for BTree
    + README - this file
    
  * Unit test project files:
@@ -80,14 +79,30 @@ TESTING:
  run-times, in seconds, are as follows:
  
  * GeneBankCreateBTree:
-   + Cache Size 100: ***--__FINISH__--***
-   + Cache Size 500: ***--__FINISH__--***
+   + Cache Size 100: N/A
+   + Cache Size 500: N/A
  
   * GeneBankSearch:
-    + Cache Size 100: ***--__FINISH__--***
-    + Cache Size 500: ***--__FINISH__--***
+    + Cache Size 100: N/A
+    + Cache Size 500: N/A
   
- There are no known bugs/issues with the code or project.
+ The currently known bugs are:
+ * Incorrectly creates BTree
+   + Offset may be incorrect but after checking it seems to work 
+   + Losing root node
+     + Without resetting the root node after inserting keys or more nodes the root is lost sometimes
+     + When traversing the inorder print out for debug level one is able to print the root node and
+     nothing more; almost as if children are not able to be seen
+     + Frequency data is lost when trying to print the node data as it is traversed; inserting checks
+     show that the frequency is being updated though; most likely a pointer/offset issue
+ * Cannot search through created BTree because it is not created correctly
+   + Seems to be an offset issue again
+   + Correctly parses query strings but returns none found
+   
+ The parsing of keys and substrings is working correctly per the Test classes that were made.
+ The cache functionality is set up to be used but was not implemented because the BTree functionality
+ did not work yet. As it stands now the project is almost fully implemented with bugs involving the BTree 
+ creation that make the rest of the support code not work.
 
 DISCUSSION:
  
@@ -95,19 +110,41 @@ DISCUSSION:
  with the cache class implemented; so the program arguments shown in Section 5
  of the project write-up were used. 
  
-  **-- * -- THIS IS A TEMPLATE THAT NEEDS REPLACING -- * --**
+ APPENDIX:
  
- The random aspects of each processes process time and priority level made the 
- task of testing the simulations functionality more difficult; but by stepping
- through the output based upon the report of when the processes were made and
- finished helped prove the correctness of the program. 
+ General binary specifications:
+ + Btree = giant array
+ + First 4096 bytes used for BTree metadata'
+ + Offset zero in the file will be the pointer to root
+ + All data will be 64 bit longs
+ + Max sub sequence size = 31 characters
+ + No matter the sub sequence size, write 64 bits to array
+ + Node size = 4096 bytes
+ + Node Metadata
+ 	1. parent_pointer - 4 bytes
+ 	2. number_of_children - 4 bytes
+ 	3. number_of_keys - 4 bytes
+ 	4. fileOffset - 4 bytes
+ 	3. isLeaf - 1 bytes
+ 	- 24 word aligned
+ + Key size = 64 bits = 8 bytes
+ + Meta-data of single node + size of pointer (to parent) + size of key*(2t - 1) + size of pointer (to children) * 2t = 4096
+ 	- 24 + 12(2t-1) + 4*2t = 4096
+ 	- 32t + 12 = 4096
+ 	- t = 127
+ + Node Structure
+ 	1. Metadata (24 Bytes, offset = 0)
+ 	2. 253 Keys(Tree Objects) (3036 Bytes, offset = 24)
+ 	3. 254 Children Pointers (1016 Bytes, offset = 3064)
  
- As discussed in class; changing the update function to not use MaxHeapifyUp
- inside of the for loop and instead use a compare method walking from the end 
- of the array list to the beginning saved time. In order to see this I ran the 
- CPU scheduling simulation for 100,000 units of simulation time. Adding a 
- stopwatch (System.currentTimeMillis()) counter to the beginning and end of
- CPUScheduling.java allowed me to measure the total run time of the program. 
- It was seen that comparing the children to the parent at the end of the update
- method, using MaxHeapifyCompare (instead of MaxHeapifyUp inside of the for
- loop) saved an average of 1.2 seconds of runtime over 5 runs of the program.
+ 
+ A = 00
+ 
+ T = 11
+ 
+ C = 01
+ 
+ G = 10
+ 
+ If the name of the GeneBank file is xyz.gbk, the sequence length is k, the BTree degree is t,
+ then the name of the btree file should be xyz.gbk.btree.data.k.t.

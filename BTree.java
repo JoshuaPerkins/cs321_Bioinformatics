@@ -1,15 +1,14 @@
+import java.io.*;
+
 /**
- * BTree class for ...
+ * BTree class for implementing a BTree that stores GeneBank data.
  *
- * @author JPerkins
- * Date: April 13, 2018
+ * @author LDirkes
+ * Date: May 4, 2018
  *
  * Class: CS 321 - Data Structures
  * Spring 2018 - Steven Cutchin
  */
-import javafx.scene.Parent;
-
-import java.io.*;
 
 public class BTree {
     // Class Variables
@@ -28,23 +27,19 @@ public class BTree {
      */
     public BTree(int degree, String fileName, boolean useCache, int cacheSize) throws IOException {
         bTreeFile = new RandomAccessFile(fileName, "rw");
-        fileOffset = 0;
-        bTreeFile.setLength(8192);
-        setFileOffset(0);
-        bTreeFile.writeInt(degree);
-        bTreeFile.writeLong(fileOffset);
-        bTreeFile.writeInt(nextSpot);
-        bTreeFile.writeInt(nodeSize);
+        // Unsure of use commented for now
+//        bTreeFile.setLength(8192);
+//        bTreeFile.writeLong(1111111);
         root = createBTN(degree);
+        root.parent = 0;
         this.degree = degree;
     }
 
-    public BTree(int degree, String fileName) throws IOException {
-        bTreeFile = new RandomAccessFile(fileName, "rw");
-        this.degree = degree;
-        root = readNode(4096);
-    }
-
+    /**
+     * Returns rood node.
+     *
+     * @return root node
+     */
     public BTreeNode getRoot() {
         return root;
     }
@@ -61,7 +56,7 @@ public class BTree {
         result.isLeaf = true;
         result.keys[0] = new TreeObject(0);
         result.keys[0].setFreq(0);
-        result.numKeys = 1;
+        result.numKeys = 0;
         result.numChildren = 0;
         writeNode(true, result);
         return result;
@@ -106,6 +101,10 @@ public class BTree {
             while(i > 0 && key < node.keys[i].getKey()){
                 i--;
             }
+            // MUST CHECK FOR SAME ITEM TO INCREMENT FREQUENCY OF NON LEAF NODE ELEMENTS
+            if (i >= 0 && key == node.keys[i].getKey()) {
+                node.keys[i].freqIncrement();
+            }
             BTreeNode child = readNode(node.children[i]);
             if(child.numKeys == 2*degree-1){
                 splitChild(node, child, i);
@@ -148,6 +147,7 @@ public class BTree {
         writeNode(true, newParent);
         splitChild(newParent, node, 0);
         insertNonFull(key, newParent);
+        return;
     }
 
     /**
@@ -181,6 +181,7 @@ public class BTree {
     public void splitChild(BTreeNode parent, BTreeNode fullChild, int childIndex) throws IOException{
         BTreeNode newChild = new BTreeNode(degree);
         newChild.isLeaf = fullChild.isLeaf;
+        newChild.parent = fullChild.parent;
         // splitting the keys between the two children
         for(int i = 0; i < degree - 1; i++){
             newChild.keys[i] = fullChild.keys[i+degree];
@@ -216,6 +217,7 @@ public class BTree {
 
     /**
      * Method for setting the file offset in a B-Tree node
+     *
      * @param fileOffset: desired file offset
      */
     public void setFileOffset(long fileOffset) throws IOException{
@@ -225,6 +227,7 @@ public class BTree {
 
     /**
      * Method for writing a node to a binary file
+     *
      * @param node: node to be written to RAF
      */
     public void writeNode(boolean isNew, BTreeNode node) throws IOException{
@@ -254,10 +257,17 @@ public class BTree {
         for(int j=0; j < node.numChildren; j++){
             bTreeFile.writeInt(node.children[j]);
         }
+        // Resets root node so that the program is able to see it
+        // When removed the root node is lost; Unsure of reasoning
+        // Cannot traverse through children for some reason
+        if (node.fileOffset == 4096) {
+            root = node;
+        }
     }
 
     /**
      * Method for reading a node from a binary file
+     *
      * @param pointer: pointer to node to be read from RAF
      */
     public BTreeNode readNode(int pointer) throws IOException{
@@ -289,32 +299,19 @@ public class BTree {
      * @throws IOException
      */
     public void inorderDebugPrinter(BTreeNode node, int k, PrintWriter writer) throws IOException {
-//        if (node != null) {
-//            for (int i = 0; i < node.numChildren; i++) {
-//                // Temporarily store the child node
-//                BTreeNode temp = readNode(node.children[i]);
-//                // If node is not leaf go to child
-//                if (!node.isLeaf) {
-//                    // Recursive call to traverse
-//                    inorderDebugPrinter(temp, k, writer);
-//                }
-//                // Loops through objects until all keys and their frequencies are printed
-//                for (int j = 0; j < node.numKeys; j++) {
-//                    // Writes frequency and key to file then inserts a new line
-//                    writer.print(node.keys[i].getFreq() + " ");
-//                    writer.print(GeneConvert.longToSubsequence(node.keys[i].getKey(), k));
-//                    writer.println();
-//                }
-//            }
-//        }
         for (int i = 0; i < node.numKeys; i++){
+            // Print statements for debugging while it checks the node information
+            System.out.println(node.numKeys);
             System.out.print("\n" + node.keys[i].getFreq() + " ");
             System.out.print(GeneConvert.longToSubsequence(node.keys[i].getKey(), k) + " ");
             System.out.print(node.keys[i].getKey() + "\n");
+            // Printer writer to file for node information
             writer.print(node.keys[i].getFreq()+ " ");
             writer.println(GeneConvert.longToSubsequence(node.keys[i].getKey(), k));
         }
-        if (!node.isLeaf()){
+        // Currently prints child more than once then ends if (|| root == node) is added
+        // Checks for leafs and recursively calls down to print other information
+        if ((!node.isLeaf())){
             for (int i = 0; i < node.numKeys + 1; ++i){
                 int offset = node.children[i];
                 BTreeNode x = readNode(offset);
@@ -327,6 +324,9 @@ public class BTree {
         }
     }
 
+    /**
+     * BTreeNode class that helps the BTree use/creation.
+     */
     class BTreeNode {
         // class variables
         int fileOffset;
@@ -374,6 +374,9 @@ public class BTree {
         }
     }
 
+    /**
+     * TreeObject class that stores the key/freq values in BTreeNodes.
+     */
     public class TreeObject {
 
         private long key;

@@ -9,7 +9,6 @@ import java.io.*;
  * Class: CS 321 - Data Structures
  * Spring 2018 - Steven Cutchin
  */
-
 class ParseFile {
 
     // Variables used when performing unit tests
