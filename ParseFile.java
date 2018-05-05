@@ -181,8 +181,7 @@ class ParseFile {
                 }
                 // Insert subsequence key into tree if not testing
                 if (!parseTest) {
-                    System.out.println("\nTRYING INSERT OF KEY: " + key + "\n");
-                    myBTree.insert(4096, key);      // myBTree.root.fileOffset -> pointer
+                    myBTree.insert(myBTree.getRoot().fileOffset, key);
                 }
                 // Deletes first character from subsequence to prepare for next subsequence
                 currentSubseq.deleteCharAt(0);
