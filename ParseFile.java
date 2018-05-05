@@ -235,6 +235,11 @@ class ParseFile {
             }
         }
 
+        // Adds default case where degree is not included in filename
+        if ((type == 1) && (sectionCount == 4)){
+            return 127;
+        }
+
         try {
             // Parses the integer values from the key length and degree strings
             value = Integer.parseInt(currentParse.toString());

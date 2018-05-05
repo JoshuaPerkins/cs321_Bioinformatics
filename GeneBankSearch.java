@@ -109,8 +109,7 @@ public class GeneBankSearch {
 
             // Parses the integer values from the key length and degree strings
             subsequenceLengthCheck = ParseFile.parseKeyDegree(btree_filename, 0);
-            treeDegree = 127;
-                    //ParseFile.parseKeyDegree(btree_filename, 1);
+            treeDegree = ParseFile.parseKeyDegree(btree_filename, 1);
 
             // Checks that query and BTree files match subsequence length
             if (subsequenceLength != subsequenceLengthCheck) {
