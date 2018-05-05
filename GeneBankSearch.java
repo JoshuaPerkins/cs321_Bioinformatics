@@ -120,14 +120,14 @@ public class GeneBankSearch {
             // Creates new BTree
             BTree myBTree = new BTree (treeDegree, btree_filename, useCache, cacheSize);
 
-
             // While items exist in query array convert them to keys and search BTree
             for (int i = 0; i < queryArray.size(); i++) {
                 // Convert query entry to key
+
                 long key = GeneConvert.subsequenceToLong(queryArray.get(i), subsequenceLength);
 
                 // Searches for key in BTree and prints frequency information
-                int freq = myBTree.search(key, myBTree.getRoot().fileOffset);
+                int freq = myBTree.search(key, myBTree.getRoot().fileOffset); // could have the issue
                 //Print frequency info
                 printFrequencyInfo(queryArray.get(i), freq);
             }

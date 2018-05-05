@@ -118,11 +118,12 @@ public class BTree {
         // if node has room
         if (node.numKeys < 2 * degree - 1) {
             insertNonFull(key, node);
+            root = node;
             return;
         }
         // if the node is full
         BTreeNode newParent = new BTreeNode(degree);
-        if(node.parent != 0) {
+        if(node.parent != 4096) { //changed from 0
             BTreeNode oldParent = readNode(node.parent);
             // find the child's pointer in the old parent's children array
             while (pointer != oldParent.children[i]) {
@@ -170,6 +171,7 @@ public class BTree {
     public void splitChild(BTreeNode parent, BTreeNode fullChild, int childIndex) throws IOException{
         BTreeNode newChild = new BTreeNode(degree);
         newChild.isLeaf = fullChild.isLeaf;
+        newChild.parent = fullChild.parent;
         // splitting the keys between the two children
         for(int i = 0; i < degree - 1; i++){
             newChild.keys[i] = fullChild.keys[i+degree];
@@ -257,7 +259,7 @@ public class BTree {
         node.fileOffset = bTreeFile.readInt();
         node.isLeaf = bTreeFile.readBoolean();
         bTreeFile.seek(pointer+24);
-        for(int i=0; i < node.numKeys; i++){
+        for(int i=0; i <= node.numKeys; i++){
             node.keys[i] = new TreeObject(bTreeFile.readLong());
             node.keys[i].setFreq(bTreeFile.readInt());
         }
@@ -296,8 +298,8 @@ public class BTree {
 //            }
 //        }
         for (int i = 0; i < node.numKeys; i++){
-            System.out.print("\n" + node.keys[i].getFreq() + " ");
-            System.out.print(GeneConvert.longToSubsequence(node.keys[i].getKey(), k) + " ");
+            System.out.print("\n Frequency " + node.keys[i].getFreq() + " ");
+            System.out.print(GeneConvert.longToSubsequence(node.keys[i].getKey(), k) + " Key ");
             System.out.print(node.keys[i].getKey() + "\n");
             writer.print(node.keys[i].getFreq()+ " ");
             writer.println(GeneConvert.longToSubsequence(node.keys[i].getKey(), k));
@@ -397,31 +399,3 @@ public class BTree {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

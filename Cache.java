@@ -4,6 +4,9 @@ Cache creation
 
 import java.util.LinkedList;
 
+/**
+ * Cache class
+ */
 public class Cache {
         int ref = 0;
         int refL1 = 0;
@@ -37,8 +40,12 @@ public class Cache {
             }
         }
 
-        // getting object from level 1 or level 2
-        public boolean getObject(Object aword) {
+    /**
+     * Getting object from cache
+     * @param aword
+     * @return
+     */
+    public boolean getObject(Object aword) {
             if(firstCacheSize > 0) {
                 refL1++;
                 if(listL1.contains(aword)) {
@@ -51,7 +58,11 @@ public class Cache {
             return false;
         }
 
-        public void clearCache(int list) {
+    /**
+     * clears cache
+     * @param list
+     */
+    public void clearCache(int list) {
             if(list == 1) {
                 listL1.clear();
             }
@@ -60,7 +71,11 @@ public class Cache {
             }
         }
 
-        public void removeObject(Object aword) {
+    /**
+     * Removes object from cache
+     * @param aword
+     */
+    public void removeObject(Object aword) {
             if(listL1.contains(aword)) {
                 listL1.remove(aword);
             }
