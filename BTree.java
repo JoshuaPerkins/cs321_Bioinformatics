@@ -143,8 +143,26 @@ public class BTree {
      * @param key: long value
      * @return frequency: frequency of the key within the B-tree
      */
-    public long search(long key) {
+    public long search(long key, int pointer) throws IOException{
        long frequency = 0;
+       BTreeNode node = readNode(pointer);
+       int i = 0;
+       boolean greaterThan = true;
+       boolean found = false;
+       while(i < node.numKeys && greaterThan && !found){
+           if(key == node.keys[i].getKey()){
+               frequency = node.keys[i].getFreq();
+               found = true;
+           }
+           greaterThan = key > node.keys[i].getKey();
+           i++;
+       }
+       if(!found){
+           if(i == node.numKeys) {
+               i++;
+           }
+           frequency = search(key,node.children[i]);
+       }
        return frequency;
     }
 
