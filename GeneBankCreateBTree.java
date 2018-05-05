@@ -23,7 +23,7 @@ public class GeneBankCreateBTree {
         final int MIN_ARGS_IN = 5;
         final int MAX_ARGS_IN = 6;
         // Optimum degree based upon disk block size of 4096
-        final int OPTIMUM_DEGREE = 128;
+        final int OPTIMUM_DEGREE = 127;
         // Debug file name
         final String DEBUG_FILE_OUT = "dump";
         // Maximum subsequence length
@@ -155,7 +155,7 @@ public class GeneBankCreateBTree {
                 dumpFile.createNewFile();   // create handle return?
                 PrintWriter writer = new PrintWriter(dumpFile);
                 // Traverses the BTree writing the frequency and subsequence information to the debug file
-//                BTreeTraversal.inorderDebugPrinter(myBTree.root, subsequenceLength, writer);
+                BTreeTraversal.inorderDebugPrinter(myBTree, myBTree.getRoot(), treeDegree, writer);
                 // Closes the writer
                 writer.close();
             }
