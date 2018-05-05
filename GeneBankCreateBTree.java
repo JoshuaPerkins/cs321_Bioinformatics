@@ -10,7 +10,6 @@ import java.io.*;
  * Class: CS 321 - Data Structures
  * Spring 2018 - Steven Cutchin
  */
-
 public class GeneBankCreateBTree {
 
     /**
@@ -149,8 +148,8 @@ public class GeneBankCreateBTree {
             if (debugLevel == 1) {
                 // Creates a new dump file for debug information
                 File dumpFile = new File(DEBUG_FILE_OUT);
-                dumpFile.delete();          // delete handle return?
-                dumpFile.createNewFile();   // create handle return?
+                dumpFile.delete();
+                dumpFile.createNewFile();
                 System.out.println("TAKING A DUMP!\n");
                 PrintWriter writer = new PrintWriter(dumpFile);
                 // Traverses the BTree writing the frequency and subsequence information to the debug file

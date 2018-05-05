@@ -1,9 +1,14 @@
-/*
-Cache creation
- */
-
 import java.util.LinkedList;
 
+/**
+ * BTree class for implementing a BTree that stores GeneBank data.
+ *
+ * @author DFlores
+ * Date: May 4, 2018
+ *
+ * Class: CS 321 - Data Structures
+ * Spring 2018 - Steven Cutchin
+ */
 public class Cache {
         int ref = 0;
         int refL1 = 0;

@@ -1,7 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
 
-
 /**
  * GeneBankSearch class for searching a BTree for subsequences from a query file.
  *
@@ -88,7 +87,7 @@ public class GeneBankSearch {
 
         try {
             String btree_filename = (args[1]);
-            File btree_file = new File(args[1]);
+            File btree_file = new File(args[1]);    //Currently use filename; could change later
             File query_file = new File(args[2]);
 
             // Creates the File/Buffered Readers to process gbk file
@@ -162,7 +161,9 @@ public class GeneBankSearch {
         System.exit(0);
     }
 
-    /**/
+    /**
+     * Prints the sequence and frequency information that is returned from a node.
+     */
     private static void printFrequencyInfo(String query, int freq) {
         System.out.print("Sequence: " + query + " Frequency: " + freq);
         System.out.println();
