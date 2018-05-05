@@ -87,7 +87,15 @@ TESTING:
     + Cache Size 100: ***--__FINISH__--***
     + Cache Size 500: ***--__FINISH__--***
   
- There are no known bugs/issues with the code or project.
+ The currently known bugs are:
+ * Incorrectly creates BTree
+   + Offset may be incorrect but after checking it seems to work 
+   + Losing root node
+     + Without resetting the root node after inserting keys or more nodes the root is lost sometimes
+     + When traversing the inorder print out for debug level one is able to print the root node and
+     nothing more; almost as if children are not able to be seen
+ * Cannot search through created BTree because it is not created correctly
+   + Seems to be an offset issue again
 
 DISCUSSION:
  
@@ -97,17 +105,3 @@ DISCUSSION:
  
   **-- * -- THIS IS A TEMPLATE THAT NEEDS REPLACING -- * --**
  
- The random aspects of each processes process time and priority level made the 
- task of testing the simulations functionality more difficult; but by stepping
- through the output based upon the report of when the processes were made and
- finished helped prove the correctness of the program. 
- 
- As discussed in class; changing the update function to not use MaxHeapifyUp
- inside of the for loop and instead use a compare method walking from the end 
- of the array list to the beginning saved time. In order to see this I ran the 
- CPU scheduling simulation for 100,000 units of simulation time. Adding a 
- stopwatch (System.currentTimeMillis()) counter to the beginning and end of
- CPUScheduling.java allowed me to measure the total run time of the program. 
- It was seen that comparing the children to the parent at the end of the update
- method, using MaxHeapifyCompare (instead of MaxHeapifyUp inside of the for
- loop) saved an average of 1.2 seconds of runtime over 5 runs of the program.

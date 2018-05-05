@@ -146,12 +146,6 @@ public class GeneBankSearch {
             System.out.println("ERROR: When closing Buffer/File : " + e.getMessage() + "\n\n");
             System.exit(0);
         }
-
-        // ####################################################
-        // Needed?
-        if (debugLevel == 0) {
-
-        }
     }
 
     /**

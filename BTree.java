@@ -7,7 +7,6 @@
  * Class: CS 321 - Data Structures
  * Spring 2018 - Steven Cutchin
  */
-import javafx.scene.Parent;
 
 import java.io.*;
 
@@ -300,9 +299,9 @@ public class BTree {
             writer.print(node.keys[i].getFreq()+ " ");
             writer.println(GeneConvert.longToSubsequence(node.keys[i].getKey(), k));
         }
-        // Currently prints child more than once then ends
+        // Currently prints child more than once then ends if (|| root == node) is added
         // Checks for leafs and recursively calls down to print other information
-        if ((!node.isLeaf()) || (root == node)){
+        if ((!node.isLeaf())){
             for (int i = 0; i < node.numKeys + 1; ++i){
                 int offset = node.children[i];
                 BTreeNode x = readNode(offset);
