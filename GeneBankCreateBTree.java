@@ -23,7 +23,7 @@ public class GeneBankCreateBTree {
         final int MIN_ARGS_IN = 5;
         final int MAX_ARGS_IN = 6;
         // Optimum degree based upon disk block size of 4096
-        final int OPTIMUM_DEGREE = 128;
+        final int OPTIMUM_DEGREE = 127;
         // Debug file name
         final String DEBUG_FILE_OUT = "dump";
         // Maximum subsequence length
