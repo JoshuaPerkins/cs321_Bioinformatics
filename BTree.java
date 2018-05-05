@@ -15,7 +15,7 @@ public class BTree {
     int degree;    // degree of the B-tree
     long fileOffset;
     int nextSpot = 4096;
-    long nodeSize = 4096;  // size of each node in the B-tree
+    int nodeSize = 4096;  // size of each node in the B-tree
     BTreeNode root; // root node of the B-tree
     RandomAccessFile bTreeFile; // binary file the B-tree is saved in
 
@@ -208,6 +208,7 @@ public class BTree {
             parent.keys[n].setKey(parent.keys[n-1].getKey());
         }
         parent.keys[childIndex] = fullChild.keys[degree];
+        newChild.parent = fullChild.parent;
         parent.numKeys++;
         writeNode(false, parent);
         writeNode(false, fullChild);
