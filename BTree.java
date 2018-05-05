@@ -143,8 +143,8 @@ public class BTree {
      * @param key: long value
      * @return frequency: frequency of the key within the B-tree
      */
-    public long search(long key, int pointer) throws IOException{
-       long frequency = 0;
+    public int search(long key, int pointer) throws IOException{
+       int frequency = 0;
        BTreeNode node = readNode(pointer);
        int i = 0;
        boolean greaterThan = true;
@@ -278,33 +278,33 @@ public class BTree {
      * @throws IOException
      */
     public void inorderDebugPrinter(BTreeNode node, int k, PrintWriter writer) throws IOException {
-      //  if (node != null) {
-          //  for (int i = 0; i < node.numChildren; i++) {
-           //     // Temporarily store the child node
-            //    BTreeNode temp = readNode(node.children[i]);
-             //   // If node is not leaf go to child
-             //   if (!node.isLeaf) {
-            //        // Recursive call to traverse
-           //         inorderDebugPrinter(temp, k, writer);
-          //      }
-         //       // Loops through objects until all keys and their frequencies are printed
-        //        for (int j = 0; j < node.numKeys; j++) {
-       //             // Writes frequency and key to file then inserts a new line
-      //              writer.print(node.keys[i].getFreq() + " ");
-     //               writer.print(GeneConvert.longToSubsequence(node.keys[i].getKey(), k));
-    //                writer.println();
-   //             }
-  //          }
- //       } //----------------------------------------------------------------------
+//        if (node != null) {
+//            for (int i = 0; i < node.numChildren; i++) {
+//                // Temporarily store the child node
+//                BTreeNode temp = readNode(node.children[i]);
+//                // If node is not leaf go to child
+//                if (!node.isLeaf) {
+//                    // Recursive call to traverse
+//                    inorderDebugPrinter(temp, k, writer);
+//                }
+//                // Loops through objects until all keys and their frequencies are printed
+//                for (int j = 0; j < node.numKeys; j++) {
+//                    // Writes frequency and key to file then inserts a new line
+//                    writer.print(node.keys[i].getFreq() + " ");
+//                    writer.print(GeneConvert.longToSubsequence(node.keys[i].getKey(), k));
+//                    writer.println();
+//                }
+//            }
+//        }
         for (int i = 0; i < node.numKeys; i++){
-            System.out.print("node number of keys is " + node.numKeys);
+            System.out.print("\n" + node.keys[i].getFreq() + " ");
+            System.out.print(GeneConvert.longToSubsequence(node.keys[i].getKey(), k) + " ");
+            System.out.print(node.keys[i].getKey() + "\n");
             writer.print(node.keys[i].getFreq()+ " ");
             writer.println(GeneConvert.longToSubsequence(node.keys[i].getKey(), k));
         }
         if (!node.isLeaf()){
-            System.out.println("The node is not a leaf"); //df
             for (int i = 0; i < node.numKeys + 1; ++i){
-                System.out.print(" " + node.children[i]); // df
                 int offset = node.children[i];
                 BTreeNode x = readNode(offset);
                 inorderDebugPrinter(x, k, writer);
@@ -313,39 +313,8 @@ public class BTree {
                     writer.println(GeneConvert.longToSubsequence(node.keys[i].getKey(),k));
                 }
             }
-        }//---------------------------------------------------------------------
-    System.out.print("Hey I made it here dawg.");
-    }
-
-    //================================================================================================
-/*    private void writeInOrderTraversalToFile(BTreeNode x, int k, FileWriter fw) {
-        try {
-            if (x.isLeaf()) {
-                for (int i = 1; i <= x.numKeys; i++) {
-                    // fw.write(String.format("%s: %d\n",
-                    // TreeObject.keyToString(x.getKeyAt(i), sequenceLength),
-                    // x.getFrequency(i)));
-                    fw.write(String.format("%d %s\n", x.getFrequency(i),
-                            TreeObject.keyToString(x.getKeyAt(i), k)));
-                    // System.out.println(x.getKeyAt(i));
-                }
-                return;
-            } else {
-                for (int i = 1; i <= x.numKeys; i++) {
-                    writeInOrderTraversalToFile(readNode(x.getChildAt(i)), fw);
-                    // fw.write(String.format("%s: %d\n",
-                    // TreeObject.keyToString(x.getKeyAt(i), sequenceLength),
-                    // x.getFrequency(i)));
-                    fw.write(String.format("%d %s\n", x.getFrequency(i),
-                            TreeObject.keyToString(x.getKeyAt(i), k)));
-                    // System.out.println(x.getKeyAt(i));
-                }
-                writeInOrderTraversalToFile(readNode(x.getChildAt(x.numKeys + 1)), fw);
-               // writeInOrderTraversalToFile(readNode(x.getChildAt(x.numKeys + 1)), fw);
-            }
         }
-    }*/
-//=====================================================================================================
+    }
 
     class BTreeNode {
         // class variables

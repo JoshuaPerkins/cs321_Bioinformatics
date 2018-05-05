@@ -24,7 +24,7 @@ public class GeneBankSearch {
         // Using cache boolean
         boolean useCache = false;
         // Variables defining characteristics of program
-        int cacheSize;
+        int cacheSize = 0;
         int debugLevel = 0;
         int subsequenceLength;
         int subsequenceLengthCheck;
@@ -59,7 +59,7 @@ public class GeneBankSearch {
         try {
             // Set up cache size from user input
             cacheSize = Integer.parseInt(args[3]);
-            if (cacheSize < 1) {
+            if ((cacheSize < 1) && (useCache)) {
                 System.out.println("ERROR: Check correct usage for <cache size>.\n");
                 printGeneBankSearchUse();
             }
@@ -72,7 +72,7 @@ public class GeneBankSearch {
         if (args.length > MIN_ARGS_IN) {
             try {
                 // Set up debug level from user input
-                debugLevel = Integer.parseInt(args[5]);
+                debugLevel = Integer.parseInt(args[4]);
                 switch (debugLevel) {
                     case 0:
                         break;
@@ -109,7 +109,8 @@ public class GeneBankSearch {
 
             // Parses the integer values from the key length and degree strings
             subsequenceLengthCheck = ParseFile.parseKeyDegree(btree_filename, 0);
-            treeDegree = ParseFile.parseKeyDegree(btree_filename, 1);
+            treeDegree = 127;
+                    //ParseFile.parseKeyDegree(btree_filename, 1);
 
             // Checks that query and BTree files match subsequence length
             if (subsequenceLength != subsequenceLengthCheck) {
@@ -118,7 +119,7 @@ public class GeneBankSearch {
             }
 
             // Creates new BTree
-//            BTree myBTree = new BTree (treeDegree, btree_file, useCache, cacheSize);
+            BTree myBTree = new BTree (treeDegree, btree_filename, useCache, cacheSize);
 
 
             // While items exist in query array convert them to keys and search BTree
@@ -127,10 +128,9 @@ public class GeneBankSearch {
                 long key = GeneConvert.subsequenceToLong(queryArray.get(i), subsequenceLength);
 
                 // Searches for key in BTree and prints frequency information
-//                if (myBTree.find(key)) { // add , 1 to denote printing?
-//                    //Print frequency info
-//                    printFrequencyInfo();
-//                }
+                int freq = myBTree.search(key, myBTree.getRoot().fileOffset);
+                //Print frequency info
+                printFrequencyInfo(queryArray.get(i), freq);
             }
             // Closes the File/Buffer Readers
             readBuffer.close();
@@ -170,7 +170,8 @@ public class GeneBankSearch {
     }
 
     /**/
-    private static void printFrequencyInfo() {
+    private static void printFrequencyInfo(String query, int freq) {
+        System.out.print("Sequence: " + query + " Frequency: " + freq);
         System.out.println();
     }
 
