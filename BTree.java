@@ -143,8 +143,8 @@ public class BTree {
      * @param key: long value
      * @return frequency: frequency of the key within the B-tree
      */
-    public long search(long key, int pointer) throws IOException{
-       long frequency = 0;
+    public int search(long key, int pointer) throws IOException{
+       int frequency = 0;
        BTreeNode node = readNode(pointer);
        int i = 0;
        boolean greaterThan = true;
@@ -297,6 +297,9 @@ public class BTree {
 //            }
 //        }
         for (int i = 0; i < node.numKeys; i++){
+            System.out.print("\n" + node.keys[i].getFreq() + " ");
+            System.out.print(GeneConvert.longToSubsequence(node.keys[i].getKey(), k) + " ");
+            System.out.print(node.keys[i].getKey() + "\n");
             writer.print(node.keys[i].getFreq()+ " ");
             writer.println(GeneConvert.longToSubsequence(node.keys[i].getKey(), k));
         }
