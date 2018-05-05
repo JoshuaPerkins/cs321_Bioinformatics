@@ -16,7 +16,7 @@ public class BTree {
     int degree;    // degree of the B-tree
     long fileOffset;
     int nextSpot = 4096;
-    long nodeSize = 4096;  // size of each node in the B-tree
+    int nodeSize = 4096;  // size of each node in the B-tree
     BTreeNode root; // root node of the B-tree
     RandomAccessFile bTreeFile; // binary file the B-tree is saved in
 
@@ -28,9 +28,20 @@ public class BTree {
      */
     public BTree(int degree, String fileName, boolean useCache, int cacheSize) throws IOException {
         bTreeFile = new RandomAccessFile(fileName, "rw");
+        fileOffset = 0;
         bTreeFile.setLength(8192);
-        bTreeFile.writeLong(1111111);
+        setFileOffset(0);
+        bTreeFile.writeInt(degree);
+        bTreeFile.writeLong(fileOffset);
+        bTreeFile.writeInt(nextSpot);
+        bTreeFile.writeInt(nodeSize);
         root = createBTN(degree);
+        this.degree = degree;
+    }
+
+    public BTree(int degree, String fileName) throws IOException {
+        bTreeFile = new RandomAccessFile(fileName, "rw");
+        root = readNode(4096);
         this.degree = degree;
     }
 
@@ -196,6 +207,7 @@ public class BTree {
             parent.keys[n].setKey(parent.keys[n-1].getKey());
         }
         parent.keys[childIndex] = fullChild.keys[degree];
+        newChild.parent = fullChild.parent;
         parent.numKeys++;
         writeNode(false, parent);
         writeNode(false, fullChild);
