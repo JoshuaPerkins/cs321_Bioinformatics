@@ -154,8 +154,9 @@ public class GeneBankCreateBTree {
                 System.out.println("TAKING A DUMP!\n");
                 PrintWriter writer = new PrintWriter(dumpFile);
                 // Traverses the BTree writing the frequency and subsequence information to the debug file
-                myBTree.inorderDebugPrinter(myBTree.getRoot(), treeDegree, writer);
-                // Closes the writer
+                myBTree.inorderDebugPrinter(myBTree.getRoot(), subsequenceLength, writer); //df
+
+                 // Closes the writer
                 writer.close();
             }
         }
