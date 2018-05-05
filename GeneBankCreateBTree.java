@@ -139,9 +139,7 @@ public class GeneBankCreateBTree {
         String btree_file = (gbk_file + ".btree.data." + subsequenceLength + "." + treeDegree);
 
         // Creates BTree
-        BTree myBTree = new BTree(treeDegree, btree_file);
-//            myBTree = new BTree(treeDegree, btree_file, useCache, cacheSize);
-
+        BTree myBTree = new BTree(treeDegree, btree_file, useCache, cacheSize);
 
         // Parses gbk file and adds subsequences to BTree
         ParseFile.parseGbk(gbk_file, subsequenceLength, myBTree);
@@ -153,9 +151,10 @@ public class GeneBankCreateBTree {
                 File dumpFile = new File(DEBUG_FILE_OUT);
                 dumpFile.delete();          // delete handle return?
                 dumpFile.createNewFile();   // create handle return?
+                System.out.println("TAKING A DUMP!\n");
                 PrintWriter writer = new PrintWriter(dumpFile);
                 // Traverses the BTree writing the frequency and subsequence information to the debug file
-                BTreeTraversal.inorderDebugPrinter(myBTree, myBTree.getRoot(), treeDegree, writer);
+                myBTree.inorderDebugPrinter(myBTree.getRoot(), treeDegree, writer);
                 // Closes the writer
                 writer.close();
             }
@@ -173,7 +172,7 @@ public class GeneBankCreateBTree {
     /**
      * Prints the correct usage for GeneBankCreateBTree.
      */
-    private static void printGeneBankCreateBTreeUse() {
+    public static void printGeneBankCreateBTreeUse() {
         //System.out.println("Usage: java GeneBankCreateBTree <degree> <gbk file> <sequence length> [<debug level>]\n");
         System.out.println("Usage: java GeneBankCreateBTree <cache> <degree> <gbk file> <sequence length> <cache size> [<debug level>]\n");   // cache optional?
         System.out.println("No cache = 0; Cache = 1.\n");
